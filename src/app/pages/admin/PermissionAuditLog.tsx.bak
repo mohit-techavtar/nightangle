@@ -1,0 +1,427 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import {
+  FileText, Search, Filter, Calendar, Download, User, Shield,
+  CheckCircle2, AlertTriangle, Activity, Trash2, Edit2, Eye, ChevronDown
+} from "lucide-react";
+
+interface AuditEntry {
+  id: string;
+  timestamp: string;
+  action: string;
+  actionType: "create" | "update" | "delete" | "assign" | "view";
+  user: string;
+  userEmail: string;
+  target: string;
+  targetType: "role" | "permission" | "user";
+  details: string;
+  ipAddress: string;
+  changes?: {
+    field: string;
+    oldValue: string;
+    newValue: string;
+  }[];
+}
+
+const mockAuditEntries: AuditEntry[] = [
+  {
+    id: "1",
+    timestamp: "2024-03-15T14:30:00",
+    action: "Role Created",
+    actionType: "create",
+    user: "Admin User",
+    userEmail: "admin@omnicrm.com",
+    target: "Regional Manager",
+    targetType: "role",
+    details: "Created new custom role with 28 permissions",
+    ipAddress: "192.168.1.100",
+  },
+  {
+    id: "2",
+    timestamp: "2024-03-15T12:15:00",
+    action: "Permissions Updated",
+    actionType: "update",
+    user: "Sarah Chen",
+    userEmail: "sarah.chen@omnicrm.com",
+    target: "Sales Rep",
+    targetType: "role",
+    details: "Modified permissions for Deals module",
+    ipAddress: "192.168.1.105",
+    changes: [
+      { field: "deals_delete", oldValue: "denied", newValue: "granted" },
+      { field: "deals_export", oldValue: "denied", newValue: "granted" },
+    ],
+  },
+  {
+    id: "3",
+    timestamp: "2024-03-15T10:45:00",
+    action: "User Role Assigned",
+    actionType: "assign",
+    user: "Admin User",
+    userEmail: "admin@omnicrm.com",
+    target: "5 users",
+    targetType: "user",
+    details: "Assigned 'Campaign Manager' role to 5 users",
+    ipAddress: "192.168.1.100",
+  },
+  {
+    id: "4",
+    timestamp: "2024-03-14T16:20:00",
+    action: "Role Deleted",
+    actionType: "delete",
+    user: "Admin User",
+    userEmail: "admin@omnicrm.com",
+    target: "Trial User",
+    targetType: "role",
+    details: "Removed deprecated role (affected 0 users)",
+    ipAddress: "192.168.1.100",
+  },
+  {
+    id: "5",
+    timestamp: "2024-03-14T14:10:00",
+    action: "Permission Matrix Viewed",
+    actionType: "view",
+    user: "Compliance Team",
+    userEmail: "compliance@omnicrm.com",
+    target: "All Roles",
+    targetType: "permission",
+    details: "Accessed permission matrix for audit review",
+    ipAddress: "192.168.1.120",
+  },
+  {
+    id: "6",
+    timestamp: "2024-03-14T11:30:00",
+    action: "Role Updated",
+    actionType: "update",
+    user: "Sarah Chen",
+    userEmail: "sarah.chen@omnicrm.com",
+    target: "Finance Manager",
+    targetType: "role",
+    details: "Updated role description and added 3 new permissions",
+    ipAddress: "192.168.1.105",
+    changes: [
+      { field: "description", oldValue: "Manages billing and invoices", newValue: "Manages billing, invoices, and financial reports" },
+      { field: "analytics_view", oldValue: "denied", newValue: "granted" },
+      { field: "analytics_export", oldValue: "denied", newValue: "granted" },
+    ],
+  },
+  {
+    id: "7",
+    timestamp: "2024-03-13T15:45:00",
+    action: "Bulk User Assignment",
+    actionType: "assign",
+    user: "Admin User",
+    userEmail: "admin@omnicrm.com",
+    target: "12 users",
+    targetType: "user",
+    details: "Changed role from 'Support Agent' to 'Sales Rep' for 12 users",
+    ipAddress: "192.168.1.100",
+  },
+  {
+    id: "8",
+    timestamp: "2024-03-13T09:20:00",
+    action: "Role Created",
+    actionType: "create",
+    user: "Admin User",
+    userEmail: "admin@omnicrm.com",
+    target: "Marketing Analyst",
+    targetType: "role",
+    details: "Created new custom role with 22 permissions",
+    ipAddress: "192.168.1.100",
+  },
+];
+
+export function PermissionAuditLog() {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAction, setSelectedAction] = useState<string>("all");
+  const [selectedDate, setSelectedDate] = useState<string>("7days");
+  const [showFilters, setShowFilters] = useState(false);
+  const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+
+  const getActionIcon = (type: string) => {
+    switch (type) {
+      case "create": return <CheckCircle2 size={16} className="text-green-500" />;
+      case "update": return <Edit2 size={16} className="text-blue-500" />;
+      case "delete": return <Trash2 size={16} className="text-red-500" />;
+      case "assign": return <User size={16} className="text-purple-500" />;
+      case "view": return <Eye size={16} className="text-gray-500" />;
+      default: return <Activity size={16} />;
+    }
+  };
+
+  const getActionColor = (type: string) => {
+    switch (type) {
+      case "create": return "bg-green-50 text-green-700";
+      case "update": return "bg-blue-50 text-blue-700";
+      case "delete": return "bg-red-50 text-red-700";
+      case "assign": return "bg-purple-50 text-purple-700";
+      case "view": return "bg-gray-50 text-gray-700";
+      default: return "bg-gray-50 text-gray-700";
+    }
+  };
+
+  const filteredEntries = mockAuditEntries.filter(entry => {
+    const matchesSearch = entry.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.details.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesAction = selectedAction === "all" || entry.actionType === selectedAction;
+    return matchesSearch && matchesAction;
+  });
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const handleExport = (format: "csv" | "excel" | "pdf") => {
+    console.log("Exporting audit log as:", format);
+    setShowExportMenu(false);
+  };
+
+  return (
+    <div className="h-screen overflow-y-auto bg-white">
+      {/* Header */}
+      <div className="border-b border-gray-200 bg-white sticky top-0 z-10">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="font-semibold text-[#0F1B2D] mb-1">Permission Audit Log</h1>
+              <p className="text-sm text-[#64748B]">
+                Track and review all permission and role changes across the platform
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <button
+                  onClick={() => setShowExportMenu(!showExportMenu)}
+                  className="h-10 px-5 rounded-lg border border-gray-300 text-sm font-medium text-[#0F1B2D] hover:bg-gray-50 transition-colors flex items-center gap-2"
+                >
+                  <Download size={18} />
+                  Export
+                  <ChevronDown size={16} />
+                </button>
+
+                {showExportMenu && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setShowExportMenu(false)}
+                    />
+                    <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
+                      <button
+                        onClick={() => handleExport("csv")}
+                        className="w-full px-4 py-2 text-left text-sm text-[#0F1B2D] hover:bg-gray-50"
+                      >
+                        Export as CSV
+                      </button>
+                      <button
+                        onClick={() => handleExport("excel")}
+                        className="w-full px-4 py-2 text-left text-sm text-[#0F1B2D] hover:bg-gray-50"
+                      >
+                        Export as Excel
+                      </button>
+                      <button
+                        onClick={() => handleExport("pdf")}
+                        className="w-full px-4 py-2 text-left text-sm text-[#0F1B2D] hover:bg-gray-50"
+                      >
+                        Export as PDF
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Search and Filters */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]" size={18} />
+              <input
+                type="text"
+                placeholder="Search by action, user, or target..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1565C0] focus:border-transparent"
+              />
+            </div>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`h-10 px-4 rounded-lg border text-sm font-medium flex items-center gap-2 transition-colors ${
+                showFilters ? "border-[#1565C0] bg-[#1565C0]/5 text-[#1565C0]" : "border-gray-300 text-[#0F1B2D] hover:bg-gray-50"
+              }`}
+            >
+              <Filter size={18} />
+              Filters
+              <ChevronDown size={16} className={`transition-transform ${showFilters ? "rotate-180" : ""}`} />
+            </button>
+          </div>
+
+          {/* Filter Pills */}
+          {showFilters && (
+            <div className="mt-3 space-y-3">
+              <div>
+                <div className="text-xs font-medium text-[#64748B] mb-2">Action Type</div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {[
+                    { value: "all", label: "All Actions" },
+                    { value: "create", label: "Created" },
+                    { value: "update", label: "Updated" },
+                    { value: "delete", label: "Deleted" },
+                    { value: "assign", label: "Assigned" },
+                    { value: "view", label: "Viewed" },
+                  ].map(filter => (
+                    <button
+                      key={filter.value}
+                      onClick={() => setSelectedAction(filter.value)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                        selectedAction === filter.value
+                          ? "bg-[#1565C0] text-white"
+                          : "bg-gray-100 text-[#64748B] hover:bg-gray-200"
+                      }`}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs font-medium text-[#64748B] mb-2">Time Period</div>
+                <div className="flex items-center gap-2">
+                  {[
+                    { value: "24hrs", label: "Last 24 Hours" },
+                    { value: "7days", label: "Last 7 Days" },
+                    { value: "30days", label: "Last 30 Days" },
+                    { value: "90days", label: "Last 90 Days" },
+                  ].map(filter => (
+                    <button
+                      key={filter.value}
+                      onClick={() => setSelectedDate(filter.value)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                        selectedDate === filter.value
+                          ? "bg-[#1565C0] text-white"
+                          : "bg-gray-100 text-[#64748B] hover:bg-gray-200"
+                      }`}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="p-8">
+        {/* Audit Entries */}
+        <div className="space-y-3">
+          {filteredEntries.map((entry) => (
+            <div key={entry.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-[#1565C0] transition-colors">
+              <div
+                className="p-5 cursor-pointer"
+                onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Icon */}
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${getActionColor(entry.actionType)}`}>
+                    {getActionIcon(entry.actionType)}
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-[#0F1B2D]">{entry.action}</span>
+                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getActionColor(entry.actionType)}`}>
+                            {entry.actionType}
+                          </span>
+                        </div>
+                        <div className="text-sm text-[#64748B]">{entry.details}</div>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-[#64748B] shrink-0">
+                        <Calendar size={12} />
+                        {formatTimestamp(entry.timestamp)}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6 text-xs text-[#64748B]">
+                      <div className="flex items-center gap-1.5">
+                        <User size={12} />
+                        <span>{entry.user}</span>
+                        <span className="text-[#9E9E9E]">({entry.userEmail})</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Shield size={12} />
+                        <span>Target: {entry.target}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span>IP: {entry.ipAddress}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expanded Details */}
+                {expandedEntry === entry.id && entry.changes && entry.changes.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="font-medium text-sm text-[#0F1B2D] mb-3">Changes Made:</div>
+                    <div className="space-y-2">
+                      {entry.changes.map((change, index) => (
+                        <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                          <div className="flex-1">
+                            <div className="text-xs font-medium text-[#64748B] mb-1">{change.field}</div>
+                            <div className="flex items-center gap-3">
+                              <div className="flex-1">
+                                <div className="text-xs text-[#64748B] mb-0.5">Old Value</div>
+                                <div className="text-sm text-red-600 font-mono">{change.oldValue}</div>
+                              </div>
+                              <div className="text-[#64748B]">→</div>
+                              <div className="flex-1">
+                                <div className="text-xs text-[#64748B] mb-0.5">New Value</div>
+                                <div className="text-sm text-green-600 font-mono">{change.newValue}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {filteredEntries.length === 0 && (
+          <div className="text-center py-12">
+            <FileText size={48} className="mx-auto text-gray-400 mb-4" />
+            <h3 className="font-medium text-[#0F1B2D] mb-2">No audit entries found</h3>
+            <p className="text-sm text-[#64748B] mb-6">Try adjusting your search or filter criteria</p>
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedAction("all");
+              }}
+              className="h-10 px-5 rounded-lg border border-gray-300 text-sm font-medium text-[#0F1B2D] hover:bg-gray-50 transition-colors"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

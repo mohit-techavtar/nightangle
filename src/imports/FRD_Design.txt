@@ -1,0 +1,1135 @@
+
+
+
+
+Functional Requirements Document
+with UI Design Guidelines & Figma Prompts
+
+MODULE 1: Tenant & License Management
+Omni-Channel AI-Led CRM Platform  |  Enterprise Subscription Model
+
+
+
+Document Type: FRD + UI Specification  |  Version: 1.0  |  Status: Draft
+Audience: Product, Design, Frontend, Backend, QA
+Date: March 2026
+
+Table of Contents
+
+
+
+Part 1: UI Design System & Guidelines
+This section defines the complete design system for the Tenant & License Management module. All screens, components, and interactions must adhere to these specifications to ensure visual consistency, accessibility, and a professional enterprise-grade experience.
+
+1.1 Design Principles
+Clarity First: Every screen must communicate its purpose within 3 seconds of viewing. Use clear hierarchy, labels, and visual grouping.
+Data Density with Breathing Room: Enterprise users need to see a lot of data. Use compact tables with adequate padding, collapsible sections, and progressive disclosure.
+Action Proximity: Primary actions must be within 1 click of the context they affect. No multi-page wizards for simple operations.
+Status Visibility: System status (tenant state, subscription health, license balance) must be visible at all times through persistent indicators.
+Consistent Feedback: Every user action must produce visible feedback within 200ms (loading states, success toasts, error highlights).
+Accessibility: WCAG 2.1 AA compliance. Minimum contrast ratio 4.5:1 for text. All interactive elements must be keyboard-navigable.
+
+1.2 Color System
+Token Name
+Hex Value
+Usage
+--color-primary
+#1565C0
+Primary buttons, active nav items, links, selected states
+--color-primary-dark
+#0D47A1
+Primary button hover, header background accents
+--color-primary-light
+#E3F2FD
+Selected row backgrounds, info panels, light badges
+--color-accent
+#FF6F00
+Warning badges, attention callouts, upgrade CTAs
+--color-success
+#2E7D32
+Active status badges, success toasts, positive metrics
+--color-warning
+#F57F17
+Warning alerts, threshold indicators (80-90%)
+--color-error
+#C62828
+Error states, destructive actions, critical alerts, expired badges
+--color-info
+#0277BD
+Info banners, tooltips, help text
+--color-surface
+#FFFFFF
+Card backgrounds, form backgrounds, modal backgrounds
+--color-background
+#F5F5F5
+Page background, sidebar background
+--color-nav-bg
+#0F1B2D
+Sidebar navigation background (dark navy)
+--color-nav-text
+#FFFFFF
+Sidebar navigation text
+--color-text-primary
+#212121
+Headings, body text, table data
+--color-text-secondary
+#616161
+Descriptions, helper text, timestamps
+--color-text-disabled
+#9E9E9E
+Disabled fields, placeholder text
+--color-border
+#E0E0E0
+Card borders, table borders, dividers
+--color-divider
+#EEEEEE
+Section dividers, horizontal rules
+
+
+1.3 Typography
+Font Family: Inter (Primary), system-ui (Fallback). Monospace: JetBrains Mono for codes/IDs.
+Element
+Font Size
+Weight
+Line Height
+Letter Spacing
+Page Title (H1)
+28px / 1.75rem
+700 (Bold)
+36px
+-0.02em
+Section Title (H2)
+22px / 1.375rem
+600 (Semibold)
+28px
+-0.01em
+Subsection Title (H3)
+18px / 1.125rem
+600 (Semibold)
+24px
+0
+Card Title (H4)
+16px / 1rem
+600 (Semibold)
+22px
+0
+Body Text
+14px / 0.875rem
+400 (Regular)
+20px
+0
+Body Small
+13px / 0.8125rem
+400 (Regular)
+18px
+0
+Caption / Helper Text
+12px / 0.75rem
+400 (Regular)
+16px
+0.02em
+Button Text
+14px / 0.875rem
+500 (Medium)
+20px
+0.02em
+Badge / Tag Text
+11px / 0.6875rem
+600 (Semibold)
+14px
+0.04em
+Table Header
+12px / 0.75rem
+600 (Semibold)
+16px
+0.04em
+Table Cell
+14px / 0.875rem
+400 (Regular)
+20px
+0
+Code / ID
+13px / 0.8125rem (Monospace)
+400 (Regular)
+18px
+0
+
+
+1.4 Spacing & Layout Grid
+Spacing Scale (8px base unit):
+Token
+Value
+Usage
+--space-xs
+4px
+Inline icon gaps, badge padding
+--space-sm
+8px
+Form field internal padding, compact card padding
+--space-md
+16px
+Card padding, section gaps, form field gaps
+--space-lg
+24px
+Section padding, card-to-card gaps
+--space-xl
+32px
+Page padding, major section breaks
+--space-2xl
+48px
+Page top padding, hero section spacing
+
+
+Layout Grid:
+Desktop (>1280px): 12-column grid, 24px gutters, max content width 1440px
+Sidebar: Fixed 260px width (collapsed: 64px), dark navy (#0F1B2D)
+Content Area: Fluid, min 1020px, with 32px horizontal padding
+Top Bar: Fixed 64px height, white background, contains breadcrumbs + user profile + notifications
+Cards: 8px border radius, 1px border (#E0E0E0), 16px internal padding, 4px shadow on hover
+
+1.5 Component Library Specifications
+1.5.1 Buttons
+Variant
+Background
+Text Color
+Border
+Height
+Usage
+Primary
+#1565C0
+#FFFFFF
+none
+40px
+Main CTAs: Create, Save, Confirm, Assign
+Primary Hover
+#0D47A1
+#FFFFFF
+none
+40px
+Hover state of primary
+Secondary
+#FFFFFF
+#1565C0
+1px solid #1565C0
+40px
+Secondary actions: Cancel, Back, Reset
+Danger
+#C62828
+#FFFFFF
+none
+40px
+Destructive: Suspend, Terminate, Delete
+Danger Outline
+#FFFFFF
+#C62828
+1px solid #C62828
+40px
+Less critical destructive: Cancel Subscription
+Ghost
+transparent
+#1565C0
+none
+40px
+Tertiary actions: View Details, Learn More
+Icon Button
+#F5F5F5
+#616161
+1px solid #E0E0E0
+36px
+Table row actions, filters, toolbar
+Disabled
+#EEEEEE
+#9E9E9E
+none
+40px
+Inactive state (any variant)
+
+
+Button Rules:
+Border radius: 6px for all buttons
+Padding: 12px 24px (standard), 8px 16px (compact/table row)
+Max 2 primary buttons visible per viewport section
+Destructive actions require confirmation modal
+Loading state: Replace text with spinner + 'Processing...'
+
+1.5.2 Status Badges
+Status
+Background
+Text Color
+Border
+Dot Indicator
+Active
+#E8F5E9
+#2E7D32
+1px solid #A5D6A7
+Solid green circle
+Suspended
+#FFF3E0
+#E65100
+1px solid #FFCC80
+Solid orange circle
+Expired
+#FFEBEE
+#C62828
+1px solid #EF9A9A
+Solid red circle
+Locked
+#F3E5F5
+#6A1B9A
+1px solid #CE93D8
+Solid purple circle
+Soft Deleted
+#ECEFF1
+#455A64
+1px solid #B0BEC5
+Outline gray circle
+Pending Renewal
+#FFF8E1
+#F57F17
+1px solid #FFE082
+Pulsing amber circle
+Trial
+#E3F2FD
+#1565C0
+1px solid #90CAF9
+Outline blue circle
+Draft
+#F5F5F5
+#616161
+1px solid #E0E0E0
+No dot
+
+
+1.5.3 Form Fields
+Property
+Value
+Height
+40px (single line), auto (textarea)
+Border
+1px solid #E0E0E0
+Border Radius
+6px
+Focus Border
+2px solid #1565C0
+Error Border
+2px solid #C62828
+Background
+#FFFFFF (default), #FAFAFA (disabled)
+Label Position
+Above field, 12px font semibold, 4px gap
+Helper Text
+Below field, 12px font regular, #616161
+Error Text
+Below field, 12px font regular, #C62828, replace helper text
+Required Indicator
+Red asterisk (*) after label text
+Padding
+8px 12px internal
+Placeholder Color
+#9E9E9E
+
+
+1.5.4 Data Tables
+Header Row: 44px height, #F5F5F5 background, 12px uppercase semibold text, sortable columns show sort icon
+Data Row: 52px height, #FFFFFF background, 14px regular text, bottom border 1px #EEEEEE
+Hover Row: #F5F5F5 background, slight left border accent (3px #1565C0)
+Selected Row: #E3F2FD background
+Zebra Striping: Optional, alternate rows #FAFAFA
+Pagination: Bottom-right, showing 'Showing 1-20 of 245' + page controls
+Actions Column: Right-aligned, 3-dot menu (kebab) or inline icon buttons
+Empty State: Centered illustration + message + primary CTA button
+
+1.5.5 Cards & Panels
+Card: White background, 1px #E0E0E0 border, 8px radius, 16px padding, 0 2px 4px rgba(0,0,0,0.05) shadow
+Elevated Card (hover/selected): 0 4px 12px rgba(0,0,0,0.1) shadow
+Stat Card: 120px min height, icon top-left (40x40 circle with colored background), metric value large (28px bold), label below (12px #616161)
+Alert Banner: Full-width, 48px height, left border 4px (color by severity), icon + message + dismiss button
+
+1.5.6 Modals & Dialogs
+Overlay: rgba(0,0,0,0.5) backdrop with blur(4px)
+Modal Container: White, 12px border radius, max-width 640px (standard) or 900px (wide), centered
+Header: 16px bottom border, title (18px semibold) + close icon button
+Body: 24px padding, scrollable if content exceeds viewport
+Footer: 16px top border, right-aligned buttons (Secondary + Primary), 16px padding
+Confirmation Modal (destructive): Include warning icon, red-toned description, require typing entity name for critical actions
+
+1.5.7 Navigation (Sidebar)
+Width: 260px expanded, 64px collapsed
+Background: #0F1B2D (dark navy)
+Logo Area: 64px height, centered logo mark, bottom border rgba(255,255,255,0.1)
+Nav Item: 44px height, 16px left padding, 14px text white, opacity 0.7 (default), 1.0 (active/hover)
+Active Item: Left border 3px #1565C0, background rgba(21,101,192,0.15), opacity 1.0
+Group Header: 12px uppercase text, #9E9E9E color, 24px top margin
+Icons: 20x20px, Lucide icon set, white with matching opacity
+Collapse Toggle: Bottom of sidebar, chevron icon button
+
+1.6 Iconography
+Icon Library: Lucide Icons (lucide.dev) - consistent stroke-based icon set.
+Size: 16px (inline/badges), 20px (nav/buttons), 24px (card headers), 40px (empty states)
+Stroke Width: 1.5px (default), 2px (emphasis/nav)
+Color: Inherits text color by default. Status icons use status colors.
+
+Key Icon Mapping:
+Element
+Icon
+Lucide Name
+Tenants / Companies
+Building
+building-2
+Subscriptions
+Credit Card
+credit-card
+Licenses
+Key / Shield
+key-round or shield-check
+Usage / Analytics
+Bar Chart
+bar-chart-3
+AI Calling
+Phone
+phone-call
+WhatsApp
+Message Circle
+message-circle
+Campaigns
+Megaphone
+megaphone
+Agents (AI)
+Bot
+bot
+Users
+Users
+users
+Settings
+Gear
+settings
+Notifications
+Bell
+bell
+Search
+Search
+search
+Filter
+Filter
+filter
+Export
+Download
+download
+Status Active
+Check Circle
+check-circle-2
+Status Warning
+Alert Triangle
+alert-triangle
+Status Error
+X Circle
+x-circle
+Calendar / Date
+Calendar
+calendar
+Clock / Time
+Clock
+clock
+Refresh
+Refresh CW
+refresh-cw
+
+
+
+Part 2: Screen-by-Screen Functional Requirements
+Each screen specification includes: layout description, component breakdown, interaction behavior, field specifications, validation rules, and a ready-to-use Figma Make prompt.
+
+2.1 Super Admin: Tenant List Dashboard
+Screen ID: SA-TEN-001
+Route: /admin/tenants
+Access: Super Admin only
+Purpose: Central hub to view, search, filter, and manage all tenants on the platform
+
+Layout Structure
+Top Section: Summary Stat Cards (Row of 5)
+Card 1: Total Tenants (count, icon: building-2, color: primary)
+Card 2: Active Tenants (count, icon: check-circle, color: success)
+Card 3: Expiring Soon (count within 30 days, icon: alert-triangle, color: warning)
+Card 4: Suspended / Locked (combined count, icon: x-circle, color: error)
+Card 5: Total AI Minutes Consumed Today (aggregate, icon: phone-call, color: info)
+
+Action Bar
+Left: Search input (placeholder: 'Search by company name, code, email...'), Filter dropdown button
+Right: 'Create Tenant' primary button, 'Export' ghost button, 'Bulk Actions' dropdown
+
+Filter Panel (Collapsible)
+Status filter: Multi-select chips (Active, Suspended, Expired, Locked, Soft Deleted)
+Subscription Plan filter: Dropdown (All plans listed)
+Date Range: Created date from/to date pickers
+Industry: Dropdown
+Sort By: Dropdown (Created Date, Company Name, Expiry Date, AI Minutes Used)
+'Clear All' text button + 'Apply' primary button
+
+Data Table Columns:
+Column
+Width %
+Type
+Sortable
+Notes
+Checkbox
+4%
+Selection
+No
+For bulk actions
+Tenant Code
+10%
+Monospace text
+Yes
+TNT-XXXXX format, clickable (links to detail)
+Company Name
+20%
+Text
+Yes
+Primary identifier, bold, clickable
+Primary Contact
+14%
+Text + Email
+Yes
+Name on line 1, email on line 2 (smaller)
+Plan
+10%
+Badge
+Yes
+Subscription plan name as colored badge
+Status
+8%
+Status Badge
+Yes
+Color-coded badge with dot indicator
+AI Min Used / Total
+12%
+Progress Bar + Text
+Yes
+Mini progress bar with 'X / Y min' text
+Expiry Date
+10%
+Date
+Yes
+Red text if within 7 days, yellow if within 30 days
+Actions
+12%
+Icon Buttons
+No
+View | Edit | Suspend | More (kebab menu)
+
+
+Interaction Behaviors:
+Clicking company name or tenant code opens Tenant Detail page (SA-TEN-002)
+Search is debounced (300ms), searches across company name, tenant code, primary contact name, email
+Bulk select + 'Suspend Selected' shows confirmation modal listing all selected tenants
+Pagination: 20 rows default, options for 50 and 100. Infinite scroll as alternative.
+Empty state when no tenants exist: Illustration + 'No tenants yet' + 'Create Your First Tenant' primary button
+Row hover: subtle background change + left accent border appears
+
+  FIGMA PROMPT: Tenant List Dashboard
+  Design a SaaS admin dashboard page titled 'Tenant Management'. Dark navy sidebar (260px, #0F1B2D) on the left with navigation items (Tenants active with blue left border, Subscriptions, Licenses, Usage, Settings). White top bar (64px) with breadcrumb 'Dashboard > Tenants', notification bell, and admin avatar. Main content area (#F5F5F5 background) contains: (1) Row of 5 stat cards at top - 'Total Tenants: 248', 'Active: 215', 'Expiring Soon: 12', 'Suspended: 8', 'AI Minutes Today: 45,230' - each with Lucide icon in a 40px colored circle. (2) Action bar with search input, filter button, 'Create Tenant' blue primary button (#1565C0), export button. (3) Data table with columns: checkbox, Tenant Code (monospace), Company Name (bold), Primary Contact (name + email stacked), Plan (badge), Status (colored badge with dot), AI Usage (mini progress bar), Expiry Date, Actions (icon buttons). Show 8 sample rows with mixed statuses (Active green, Suspended orange, Expired red). Pagination bar at bottom. Use Inter font, Lucide icons, 8px spacing grid. Style: clean enterprise SaaS, not consumer-playful.
+
+
+2.2 Super Admin: Tenant Detail View
+Screen ID: SA-TEN-002
+Route: /admin/tenants/:tenantId
+Access: Super Admin only
+Purpose: Comprehensive 360-degree view of a single tenant including profile, subscription, license, usage, and audit history
+
+Layout Structure
+Header Section:
+Left: Company name (H1), Tenant Code (monospace, below name), Status Badge (large)
+Right: Action buttons row - 'Edit Tenant' secondary, 'Suspend' danger outline, 'More Actions' dropdown (Lock, Soft Delete, Force Stop Campaigns)
+Below: Breadcrumb - Tenants > [Company Name]
+
+Tab Navigation (Horizontal):
+Tab
+Content
+Badge
+Overview
+Profile summary + Quick stats + Recent activity
+None
+Subscription
+Current plan details + Subscription history + Change log
+Plan tier badge
+License
+Active license details + License history + Grace extensions
+Status badge
+Usage
+AI minutes chart + Usage breakdown + Metering table
+Usage % badge
+Configuration
+Business hours + Timezone + Notification preferences
+None
+Audit Trail
+Complete chronological audit log of all actions on this tenant
+Count badge
+
+
+Tab 1 - Overview:
+Left Column (60%): Company Profile card (legal name, address, contact details, KYC status), Quick Info (industry, currency, locale, timezone)
+Right Column (40%): 4 Stat cards stacked (AI Minutes remaining with circular progress, Days until expiry with countdown, Active campaigns count, Active agents count). Below stats: Recent Activity feed (last 10 events with timestamp, actor, action description)
+
+Tab 2 - Subscription:
+Current Plan Card: Plan name, tier badge, billing cycle, price, start/end dates, auto-renew toggle, upgrade/downgrade buttons
+Feature Access Grid: 3-column grid showing all feature modules with enabled/disabled indicators
+Resource Limits Table: max_agents, max_concurrent_calls, max_users, max_campaigns with current usage vs limit bars
+Subscription History Table: All past subscriptions with plan, dates, status, change type
+
+Tab 3 - License:
+Active License Card: License number (monospace), type, validity dates, total/used/remaining AI minutes gauge, status badge, override indicator
+Actions: Override Limits, Suspend License, Terminate License, Grant Grace
+License History Table: All licenses ever issued with details
+Grace Extension History: Past grace periods with reason, approver, dates, consumed status
+
+Tab 4 - Usage:
+AI Minutes Chart: Area/line chart showing daily consumption over selected period (7d, 30d, 90d, custom). Threshold lines at 80%, 90%, 100%
+Usage Summary Cards: Total consumed, daily average, peak day, estimated days remaining
+Detailed Usage Table: Per-call/per-event usage records with timestamp, duration, call_id, campaign_id, cost
+Export button for billing reconciliation (CSV/XLSX)
+
+Tab 5 - Configuration:
+Editable form sections: Business Hours (start/end time pickers + weekday checkboxes), Default Call Timezone (dropdown), Notification Preferences (channel toggles + threshold inputs), Data Retention (days input with compliance constraint notice)
+Save button triggers confirmation toast, logs change in audit trail
+
+Tab 6 - Audit Trail:
+Chronological timeline view with filters: Action Type, Actor, Date Range
+Each entry: Timestamp | Actor Name | Action Type Badge | Description | IP Address
+Expandable detail showing before/after JSON diff for data changes
+
+  FIGMA PROMPT: Tenant Detail View
+  Design a SaaS admin tenant detail page. Top section: company name 'Everest Digital Solutions Pvt. Ltd.' (28px bold), tenant code 'TNT-00042' in monospace below, large green 'Active' status badge. Right side: 'Edit Tenant' secondary button, 'Suspend' red outline button, '...' dropdown. Horizontal tab bar below with tabs: Overview (active, blue underline), Subscription, License, Usage, Configuration, Audit Trail. Overview tab content: Left column (60%) shows Company Profile card with fields (legal name, address, city, country, PAN number, contact person, email, phone, timezone, locale, currency) and KYC Documents section showing uploaded file names with green checkmarks. Right column (40%) shows 4 stacked stat cards: 'AI Minutes Remaining: 3,420 / 10,000' with circular progress ring (34%, green), 'Subscription Expires: 42 Days' with countdown, 'Active Campaigns: 3', 'AI Agents: 5 / 10'. Below stats: Recent Activity feed with 5 entries showing timestamp, user, and action. Use Inter font, Lucide icons, navy sidebar visible on left. Enterprise SaaS aesthetic.
+
+
+2.3 Super Admin: Create Tenant
+Screen ID: SA-TEN-003
+Route: /admin/tenants/create
+Access: Super Admin only
+Purpose: Multi-step form to onboard a new tenant with company info, KYC, and initial subscription assignment
+
+Layout: Stepper Form (3 Steps)
+Horizontal stepper at top showing: Step 1: Company Information > Step 2: Compliance & KYC > Step 3: Subscription & Review. Each step is a card with form fields. 'Back' and 'Next'/'Create Tenant' buttons at bottom-right of each step.
+
+Step 1: Company Information
+Field
+Type
+Required
+Validation
+Placeholder/Default
+Company Legal Name
+Text Input
+Yes
+Min 3 chars, max 255
+'Enter registered company name'
+Registered Address
+Textarea
+Yes
+Min 10 chars
+'Full registered address'
+City
+Text Input
+Yes
+Min 2 chars
+'City name'
+State / Province
+Text Input
+No
+Max 100 chars
+'State or province'
+Country
+Searchable Dropdown
+Yes
+Must be valid ISO country
+Default: Nepal
+Postal Code
+Text Input
+No
+Alphanumeric, max 20
+'Postal / ZIP code'
+Primary Contact Name
+Text Input
+Yes
+Min 2 chars, max 255
+'Full name'
+Primary Contact Mobile
+Phone Input
+Yes
+E.164 format, with country code picker
+'+977'
+Primary Contact Email
+Email Input
+Yes
+Valid email format
+'email@company.com'
+Timezone
+Searchable Dropdown
+Yes
+Valid IANA timezone
+Default: Asia/Kathmandu
+Locale
+Dropdown
+Yes
+Valid locale code
+Default: ne-NP
+Currency
+Dropdown
+Yes
+Valid ISO 4217
+Default: NPR
+Industry
+Dropdown
+No
+From predefined list
+'Select industry (optional)'
+
+
+Step 2: Compliance & KYC
+Field
+Type
+Required
+Validation
+Notes
+PAN Number
+Text Input
+Conditional
+Nepali PAN format validation
+Required for Nepal-based companies
+PAN Certificate
+File Upload
+Conditional
+PDF/JPG/PNG, max 5MB
+Upload area with drag-drop support
+Certificate of Incorporation
+File Upload
+Yes
+PDF/JPG/PNG, max 10MB
+Upload area with drag-drop support
+
+
+File Upload Component Spec:
+Drag-and-drop zone: Dashed border (#E0E0E0), 120px height, centered upload icon + 'Drag file here or click to browse' text
+Uploading state: Progress bar with percentage, file name displayed
+Uploaded state: File name with green checkmark, file size, 'Remove' text button
+Error state: Red border, error message below ('File too large', 'Invalid format')
+
+Step 3: Subscription & Review
+Subscription Plan: Card-based selector showing published plans as selectable cards (radio behavior). Each card shows: Plan name, tier badge, price, included AI minutes, key features list, 'Most Popular' tag on recommended plan
+Start Date: Date picker (default: today)
+Billing Cycle: Pre-filled from selected plan (editable override for custom plans)
+Trial Period: Toggle switch + days input (0-30), visible only if plan supports trials
+Auto-Renew: Toggle switch (default: on)
+Review Summary: Read-only card showing all entered information grouped by step. Edit links per section to jump back.
+'Create Tenant' primary button (large, prominent)
+
+Post-Submission Flow:
+Button shows loading spinner + 'Provisioning...'
+System validates all fields server-side
+If validation passes: Database provisioned, tenant created, license generated
+Success: Full-page success state with confetti animation, tenant code displayed, 'View Tenant' button + 'Create Another' button
+If error: Inline error messages on relevant fields, scroll to first error
+
+  FIGMA PROMPT: Create Tenant Form
+  Design a multi-step form page for creating a new tenant in a SaaS admin panel. Top: horizontal stepper with 3 steps - 'Company Information' (active, blue filled circle with number), 'Compliance & KYC' (gray), 'Subscription & Review' (gray), connected by lines. Below stepper: white card containing Step 1 form fields arranged in a 2-column grid - Company Legal Name (full width), Registered Address (full width textarea), City + State/Province (side by side), Country dropdown (showing 'Nepal') + Postal Code, Primary Contact Name + Mobile (with country code +977), Email (full width), Timezone dropdown ('Asia/Kathmandu') + Locale ('ne-NP') + Currency ('NPR') in 3 columns, Industry dropdown. All fields have labels above, required fields have red asterisk. Bottom-right: 'Cancel' secondary button + 'Next: Compliance' primary button with right arrow. Navy sidebar on left, breadcrumb 'Tenants > Create New Tenant'. Clean enterprise form design, Inter font, no shadows on inputs, 6px border radius.
+
+  FIGMA PROMPT: Create Tenant - Step 3 Plan Selector
+  Design the subscription plan selection step (Step 3) of the tenant creation form. Show 3 plan cards side by side: (1) 'Starter' card - #F5F5F5 border, 'NPR 15,000/mo', '5,000 AI Minutes', features list with checkmarks (AI Calling, Basic CRM, Basic Analytics, 5 Agents, 5 Concurrent Calls). (2) 'Growth' card - #1565C0 blue border with 'Most Popular' badge, 'NPR 35,000/mo', '15,000 AI Minutes', more features checked (adds WhatsApp, Campaign Management, 15 Agents, 15 Concurrent Calls). (3) 'Enterprise' card - gold border, 'NPR 75,000/mo', '50,000 AI Minutes', all features checked (adds Advanced CRM, Advanced Analytics, API Access, Webhooks, Custom IVR, Sentiment Analysis, 50 Agents, 50 Concurrent Calls). Below cards: Start Date picker, Auto-Renew toggle, Trial Period toggle. At bottom: Review Summary card showing all entered data from all 3 steps with 'Edit' links per section. 'Back' secondary button + 'Create Tenant' large primary button. Radio selection behavior on plan cards.
+
+
+2.4 Super Admin: Subscription Plans Management
+Screen ID: SA-SUB-001
+Route: /admin/subscription-plans
+Access: Super Admin only
+Purpose: Create, edit, publish, and archive subscription plans that define feature access and pricing tiers
+
+Layout Structure
+View Toggle: Card View (default) | Table View
+
+Card View Layout:
+Grid of plan cards (3 per row on desktop, 2 on tablet, 1 on mobile)
+Each card: Plan name (H3), Tier badge, Status badge (Draft/Published/Archived), Price prominently displayed, Included AI minutes, Key limits (agents, concurrent calls, users), Feature count summary ('12 of 18 features'), Footer with 'Edit' and '...' menu (Publish, Archive, Clone, Delete Draft)
+'+ Create New Plan' card: Dashed border, centered plus icon, click opens Create Plan modal/page
+
+Create/Edit Plan Form:
+Section
+Fields
+Notes
+Basic Info
+Plan Name, Plan Code (auto-generated, editable), Description (rich text), Tier (Starter/Growth/Enterprise/Custom)
+Plan Code follows format PLAN-{TIER}-{SEQ}
+Pricing
+Base Price, Currency, Billing Cycle (Monthly/Yearly/Custom), Overage Rate per Minute
+Show estimated annual price for monthly plans
+Resource Limits
+Included AI Minutes, Max Agents, Max Concurrent Calls, Max Users, Max Campaigns
+Number inputs with validation (min 1)
+Feature Modules
+Toggle switches for all 12 feature modules (see SRS 3.2.1)
+Grouped by category: Communication, CRM, Analytics, Integration
+Pricing Tiers
+Repeatable row group: Tier Name, From Minutes, To Minutes, Rate per Minute
+Add/remove tier rows, auto-sort by range
+Availability
+Effective From date, Effective Until date (optional)
+Leave Until empty for indefinite availability
+
+
+  FIGMA PROMPT: Subscription Plans Management
+  Design a subscription plan management page for SaaS admin. Top: page title 'Subscription Plans' with 'Create New Plan' blue primary button. Below: toggle between 'Card View' and 'Table View' icons (card view active). Grid of 4 cards in 3+1 layout: (1) 'Starter' card: Draft gray badge, 'NPR 15,000/mo', '5,000 AI Min', '5 Agents', '5 Concurrent', '7/12 features', footer with Edit button and kebab menu. (2) 'Growth' card: Published green badge, 'NPR 35,000/mo', prominent blue left border, '15,000 AI Min', '15 Agents', '15 Concurrent', '10/12 features'. (3) 'Enterprise' card: Published green badge, 'NPR 75,000/mo', gold accent, '50,000 AI Min', '50 Agents', '50 Concurrent', '12/12 features'. (4) '+ Create New Plan' card: dashed #E0E0E0 border, centered plus icon, 'Create New Plan' text. Use Inter font, 8px border radius on cards, subtle shadow.
+
+
+2.5 Super Admin: License Management
+Screen ID: SA-LIC-001
+Route: /admin/licenses
+Access: Super Admin only
+Purpose: Monitor, override, and manage all tenant licenses with focus on utilization and enforcement
+
+Layout Structure
+Summary Cards Row:
+Total Active Licenses, Licenses at >90% Usage (warning), Licenses Expiring This Week, Grace Extensions Active
+
+License Table Columns:
+Column
+Width
+Type
+Notes
+License Number
+12%
+Monospace, clickable
+LIC-YYYY-XXXXX format
+Tenant
+18%
+Text, clickable
+Company name, links to tenant detail
+Type
+8%
+Badge
+Monthly/Yearly/Custom/Trial
+Status
+8%
+Status Badge
+Assigned/Active/Suspended/Expired/Terminated
+AI Minutes Usage
+16%
+Progress bar + fraction
+Color: green <70%, amber 70-90%, red >90%
+Validity Period
+14%
+Date range
+Start - End dates, red text if expiring within 7 days
+Override
+6%
+Icon indicator
+Shield icon if manual override active, tooltip shows details
+Grace
+6%
+Icon indicator
+Clock icon if grace active, tooltip shows remaining time
+Actions
+12%
+Buttons
+View | Override | Suspend | Terminate | Grant Grace
+
+
+License Override Modal:
+Title: 'Override License Limits - [Company Name]'
+Current vs New value side-by-side inputs for: Total AI Minutes, Max Agents, Max Concurrent Calls, Max Users, Max Campaigns
+Feature toggle override section (can enable features beyond plan)
+Override Reason (required textarea, min 20 chars)
+Effective: Immediately / Specific Date picker
+'Cancel' + 'Apply Override' primary button
+
+Grant Grace Extension Modal:
+Title: 'Grant Grace Extension - [Company Name]'
+Grace Type: Radio buttons - 'Additional Minutes' / 'Date Extension'
+If Minutes: Number input for additional minutes
+If Date: Date-time picker for grace end date (max 72 hours from now)
+Reason (required textarea)
+Warning banner: 'Grace minutes are billed at overage rates'
+'Cancel' + 'Grant Grace' warning-colored button
+
+  FIGMA PROMPT: License Management Dashboard
+  Design a license management page for SaaS admin. Top summary: 4 stat cards - 'Active Licenses: 215' (blue), 'High Usage (>90%): 18' (amber with alert icon), 'Expiring This Week: 5' (red), 'Grace Active: 2' (purple). Below: data table with columns - License Number (monospace 'LIC-2026-00142'), Tenant (clickable company name), Type (badge: Monthly blue, Yearly green), Status (badge with dot), AI Minutes (horizontal progress bar showing '7,840 / 10,000' with green bar at 78%), Validity ('2026-01-01 to 2026-12-31'), Override (shield icon present on some rows), Grace (clock icon on one row), Actions (View/Override/More kebab). Show 7 rows with varied data. Include one row where AI usage bar is red (>90%) and expiry date is in red text. Top right: Export button, search input. Navy sidebar, Inter font, enterprise look.
+
+
+2.6 Super Admin: Platform Usage Analytics
+Screen ID: SA-USG-001
+Route: /admin/usage
+Access: Super Admin only
+Purpose: Platform-wide usage monitoring with drill-down to per-tenant consumption
+
+Layout Structure
+Top: Date Range Selector + Quick Presets (Today, 7d, 30d, 90d, Custom)
+
+Row 1: Platform KPI Cards (6 cards):
+Total AI Minutes Consumed (period), Revenue Generated (estimated), Average Minutes per Tenant, Peak Concurrent Calls, Total Active Campaigns, New Tenants (period)
+
+Row 2: Charts (2 columns):
+Left (60%): Daily AI Minutes Consumption - Stacked area chart by tenant tier (Starter, Growth, Enterprise). X-axis: dates, Y-axis: minutes. Hover shows daily breakdown.
+Right (40%): Usage Distribution Pie/Donut - Top 10 tenants by consumption with 'Others' segment. Click segment to drill into tenant.
+
+Row 3: Top Consumers Table:
+Columns: Rank, Tenant Name, Plan, AI Minutes Used, % of Total, Revenue Contribution, Trend Arrow (up/down vs previous period)
+Default: Top 20, expandable to full list
+Click row to navigate to tenant usage detail
+
+  FIGMA PROMPT: Platform Usage Analytics
+  Design a usage analytics dashboard for SaaS platform admin. Top bar with date range selector (preset buttons: Today, 7d, 30d active with blue fill, 90d, Custom + calendar icon). Row of 6 KPI cards: 'AI Minutes: 1,245,000' (with up 12% green arrow vs last period), 'Est. Revenue: NPR 4,850,000', 'Avg/Tenant: 5,800 min', 'Peak Concurrent: 342', 'Active Campaigns: 89', 'New Tenants: 7'. Below: Two-column chart section. Left (60%): Stacked area chart showing daily AI minutes over 30 days in 3 shades of blue (Starter, Growth, Enterprise tiers), smooth curves, with hover tooltip showing date and tier breakdown. Right (40%): Donut chart showing top 5 tenants by usage with distinct colors and legend below. Bottom section: 'Top Consumers' table with rank numbers, company names, plan badges, usage bars, percentage, revenue, and trend arrows. Navy sidebar, Inter font, #F5F5F5 background.
+
+
+2.7 Customer Admin: CRM Dashboard (Home)
+Screen ID: CA-HOME-001
+Route: /dashboard
+Access: Customer Admin (Tenant User)
+Purpose: Landing page after login showing subscription health, usage at a glance, and quick actions
+
+Layout Structure
+Alert Banner (Conditional):
+Shows at top when: AI minutes < 20% remaining (amber), AI minutes exhausted (red), Subscription expiring within 7 days (amber), Subscription expired (red)
+Banner includes: icon, message text, action button ('Top Up Minutes' / 'Renew Now')
+Dismissible but reappears on next login if condition persists
+
+Row 1: Subscription Health Cards (4 cards):
+Card 1: 'Your Plan' - Plan name, tier badge, status badge, 'Manage Plan' link
+Card 2: 'AI Minutes' - Large circular progress gauge (used/total), remaining count bold, daily average consumption rate, estimated days remaining
+Card 3: 'Subscription' - Renewal date with countdown ('Renews in 42 days'), auto-renew status indicator, next invoice amount estimate
+Card 4: 'Resources' - Agents (3/10), Concurrent Calls (2/15), Campaigns (1/5) - stacked mini progress bars
+
+Row 2: Quick Actions Grid (2x3 cards):
+Launch Campaign, Create AI Agent, View Call Logs, View Usage Report, Company Settings, Get Support
+Each: Icon in colored circle + label + description text
+
+Row 3: Recent Activity Feed + Notifications Panel (2 columns):
+Left (60%): Recent Activity - Last 10 actions (calls made, campaigns launched, agents created) with timestamps
+Right (40%): Notifications - Unread alerts and system messages with read/unread styling
+
+  FIGMA PROMPT: Customer Admin Dashboard
+  Design a CRM dashboard for a customer admin user. Top: amber alert banner with warning icon - 'Your AI minutes are running low (18% remaining). Consider purchasing additional minutes.' with 'Top Up Minutes' button and X dismiss. Navy sidebar (260px) with different navigation than admin: Dashboard (active), Contacts, Companies, Deals, Campaigns, AI Agents, Call Logs, Reports, Settings. White top bar with company name 'Everest Digital Solutions', notification bell (red dot badge showing 3), user avatar with dropdown. Main content: Row of 4 cards - (1) 'Growth Plan' with blue tier badge and green 'Active' status, 'Manage Plan' link. (2) AI Minutes circular gauge showing 1,820/10,000 (18%) in amber color, 'Est. 12 days remaining' below. (3) 'Renews in 42 days' with date, auto-renew ON green indicator, 'NPR 35,000 est.' (4) Resources: Agents 5/15 (green bar), Concurrent 2/15 (green), Campaigns 1/5 (green). Below: 6 quick action cards in 3x2 grid with icons (phone, bot, list, chart, settings, help-circle). Bottom row: Recent Activity feed on left, Notifications panel on right. Clean, professional, Inter font.
+
+
+2.8 Customer Admin: My Subscription & Usage
+Screen ID: CA-SUB-001
+Route: /settings/subscription
+Access: Customer Admin
+Purpose: Self-service subscription management and detailed usage visibility
+
+Tab 1: My Plan
+Current Plan Card (Prominent):
+Plan name (H2), Tier badge, Billing cycle badge, Price prominently displayed
+Start date, End date, Renewal date with countdown
+Auto-Renew toggle with confirmation modal on change
+
+Feature Access Matrix:
+3-column grid showing all feature modules with green check (enabled) or gray lock (not included)
+Locked features show 'Available on [Higher Tier]' tooltip
+
+Plan Comparison Section:
+'Compare Plans' expandable section showing all plans in a comparison table
+Columns: Feature name rows, each plan as a column with check/cross/value
+Current plan column highlighted
+'Request Upgrade' button on higher plans, 'Request Downgrade' on lower plans
+
+Tab 2: Usage Details
+AI Minutes Usage Section:
+Large area chart: Daily consumption over selected period (7d, 30d, 90d)
+Summary stats below chart: Total used, Daily average, Peak day, Remaining, Estimated depletion date
+Threshold lines on chart at configured percentages (80%, 90%, 100%)
+
+Resource Usage Cards:
+Horizontal bar charts for: AI Agents (used/max), Concurrent Calls (peak/max), Active Campaigns (current/max), Users (active/max)
+
+Usage History Table:
+Detailed per-event logs: Date/Time, Event Type (Call/Campaign/Agent), Duration/Count, AI Minutes Consumed, Reference ID
+Filters: Date range, Event type, Campaign filter
+Export: CSV/XLSX download button
+
+Tab 3: Billing History
+Table: Invoice Number, Date, Amount, Status (Paid/Pending/Failed), Plan, Actions (View/Download PDF)
+Each row expandable to show line items (base subscription + overage charges breakdown)
+
+  FIGMA PROMPT: Customer Subscription & Usage
+  Design a subscription management page for customer admin with 3 horizontal tabs: 'My Plan' (active), 'Usage Details', 'Billing History'. My Plan tab: Prominent card showing 'Growth Plan' (22px bold), blue 'Growth' tier badge, green 'Active' badge, 'NPR 35,000 / month', dates (Jan 1 2026 - Dec 31 2026), renewal countdown '42 days', auto-renew toggle (ON, green). Below: Feature Access grid (3 columns) showing 12 features with green checkmarks for enabled (AI Calling, Basic CRM, Campaign Management, Basic Analytics, WhatsApp, Call Recording) and gray lock icons for disabled (Advanced CRM, Advanced Analytics, API Access, Webhooks, Custom IVR, Sentiment Analysis) with 'Available on Enterprise' labels. Below: 'Compare All Plans' expandable section preview with 'View comparison' link. Action buttons at bottom: 'Request Upgrade' primary blue, 'Request Downgrade' outline gray, 'Cancel Subscription' red text link. Customer sidebar navigation, Inter font, clean enterprise.
+
+
+2.9 Customer Admin: Company Settings
+Screen ID: CA-SET-001
+Route: /settings/company
+Access: Customer Admin
+Purpose: Manage company profile, business hours, notification preferences, and data retention settings
+
+Layout: Vertical Tab Navigation (Left) + Content (Right)
+
+Tab: Company Profile
+Read-only fields: Company Legal Name, Registered Address, PAN Number, Tenant Code (all managed by Super Admin)
+Editable fields: Primary Contact Name, Primary Contact Mobile, Primary Contact Email
+Changes to legal name or PAN trigger 'Request Change' flow to Super Admin
+
+Tab: Business Hours
+Visual weekly calendar: 7 day rows, each with ON/OFF toggle + Start Time picker + End Time picker
+'Copy to All Weekdays' quick action button
+Default Call Timezone dropdown (affects all scheduled campaigns)
+
+Tab: Notifications
+Channel Preferences: Toggle switches for Email, WhatsApp, In-App notifications (each independently configurable)
+Alert Thresholds: Slider inputs for AI minute warning thresholds (e.g., 'Alert me at 80% usage')
+Digest Preference: Radio buttons (Real-time / Daily Digest / Weekly Digest)
+
+Tab: Data & Privacy
+Data Retention Period: Number input with 'days' label (minimum 90, maximum set by compliance policy)
+Date Format Preference: Dropdown (Gregorian YYYY-MM-DD, Gregorian DD/MM/YYYY, Nepali BS)
+Data Export: 'Export All My Data' button (GDPR compliance)
+
+  FIGMA PROMPT: Company Settings Page
+  Design a company settings page for customer admin. Left vertical tab navigation (200px width, white background, subtle right border): tabs - 'Company Profile' (active, blue left border + text), 'Business Hours', 'Notifications', 'Data & Privacy'. Right content area showing Company Profile tab: Section 'Company Information' with read-only fields (gray background, lock icon) for Company Legal Name 'Everest Digital Solutions', Registered Address, PAN Number, Tenant Code 'TNT-00042' with a small 'Request Change' link. Section 'Contact Information' with editable fields (white background): Primary Contact Name, Mobile (with country code), Email. 'Save Changes' blue primary button at bottom right, 'Discard' secondary button. Info banner at top of read-only section: 'Company details are managed by the platform administrator. Contact support to request changes.' with blue-left-border info styling. Inter font, clean form layout.
+
+
+2.10 Super Admin: Alerts & Notifications Center
+Screen ID: SA-ALT-001
+Route: /admin/alerts
+Access: Super Admin only
+Purpose: Configure global and per-tenant alert rules, view alert history, manage notification delivery
+
+Layout Structure
+Sub-Navigation: Alert Rules | Alert History | Notification Log
+
+Alert Rules Tab:
+Table of all configured alert rules with columns: Alert Type, Scope (Global/Tenant-specific), Threshold, Channels, Status (Enabled/Disabled), Actions (Edit/Disable/Delete)
+'Add Alert Rule' primary button opens modal with: Alert Type dropdown, Threshold input, Channel multi-select checkboxes, Tenant scope (Global or specific tenant search), Custom message template (optional textarea), Enable/Disable toggle
+
+Alert History Tab:
+Chronological feed of all triggered alerts: Timestamp, Alert Type badge, Tenant Name, Threshold Crossed, Channels Delivered, Delivery Status (Sent/Failed/Pending)
+Filters: Alert type, Tenant, Date range, Delivery status
+
+  FIGMA PROMPT: Alerts & Notifications Center
+  Design an alerts management page for SaaS admin. Three sub-tabs at top: 'Alert Rules' (active), 'Alert History', 'Notification Log'. Alert Rules tab: Table showing configured rules - columns: Alert Type (badges like 'AI Minutes Warning' in amber, 'License Expiry' in blue, 'Payment Failed' in red), Scope ('Global' badge or tenant name), Threshold ('80%' or '7 days'), Channels (small icons for email, whatsapp, in-app shown as gray/blue toggle indicators), Status (green 'Enabled' / gray 'Disabled' toggle), Actions (Edit pencil, Delete trash icons). Show 6 sample rules. Top right: 'Add Alert Rule' blue primary button. When adding, show modal: Alert Type dropdown, Threshold number input with unit selector (% or days), Channels checkboxes, Scope radio (Global/Specific Tenant with search), Custom message textarea, Enable toggle. Navy sidebar, Inter font, enterprise styling.
+
+
+Part 3: Interaction Patterns & Micro-Interactions
+3.1 Loading States
+Context
+Pattern
+Duration Threshold
+Page load
+Skeleton screens matching layout structure
+Show if >300ms
+Table data loading
+Skeleton rows (5 rows placeholder)
+Show if >200ms
+Button action
+Inline spinner replacing button text + disabled state
+Immediate on click
+Form submission
+Full button spinner + 'Saving...' / 'Creating...'
+Immediate on submit
+Chart rendering
+Gray placeholder with pulse animation
+Show if >500ms
+File upload
+Progress bar with percentage + file name
+Immediate on upload start
+Search
+Inline spinner in search input
+Show if >300ms debounce
+
+
+3.2 Feedback & Toasts
+Action
+Feedback Type
+Message Example
+Duration
+Tenant created
+Success toast (top-right)
+'Tenant TNT-00042 created successfully'
+5 seconds, auto-dismiss
+License overridden
+Success toast
+'License limits updated for Everest Digital'
+5 seconds
+Tenant suspended
+Warning toast
+'Tenant suspended: Everest Digital Solutions'
+8 seconds
+Validation error
+Inline field errors + scroll to first error
+'Company name is required'
+Persistent until fixed
+Permission denied
+Error toast
+'You do not have permission for this action'
+5 seconds
+Network error
+Error banner (top of page)
+'Connection lost. Retrying...' + retry button
+Persistent until resolved
+Grace granted
+Info toast
+'Grace extension granted: 500 additional minutes'
+8 seconds
+
+
+3.3 Confirmation Patterns
+Action Severity
+Pattern
+Details
+Low (Edit, Toggle)
+No confirmation needed
+Immediate action with undo option in toast
+Medium (Suspend, Pause)
+Simple modal
+'Are you sure?' + reason dropdown + Confirm/Cancel buttons
+High (Terminate, Delete, Lock)
+Destructive confirmation modal
+Warning icon, red description, must type entity name to confirm, double button (Cancel primary, Confirm danger)
+Critical (Force Stop All, Bulk Suspend)
+Super confirmation
+Warning modal + mandatory reason + 10-second countdown before confirm button enables
+
+
+3.4 Empty States
+Every list/table screen must define an empty state with: Relevant illustration (line art style, muted colors), descriptive heading ('No tenants yet'), supporting text ('Create your first tenant to get started'), primary CTA button ('Create Tenant')
+Filter empty state (different from true empty): 'No results match your filters' + 'Clear Filters' button
+Error state: Error illustration + 'Something went wrong' + 'Try Again' button + 'Contact Support' link
+
+3.5 Responsive Behavior
+Breakpoint
+Width
+Sidebar
+Layout Changes
+Desktop Large
+>1440px
+260px expanded
+Full layout, 12-column grid
+Desktop
+1280-1440px
+260px expanded
+Full layout, tables may horizontal scroll
+Tablet Landscape
+1024-1279px
+64px collapsed
+Stat cards stack 2x2, table columns reduced
+Tablet Portrait
+768-1023px
+Hidden (hamburger)
+Single column, cards full width, simplified tables
+Mobile
+<768px
+Hidden (hamburger)
+Stacked layout, card views replace tables, bottom nav for primary actions
+
+
+
+Part 4: Master Figma Design Prompt
+Use the following comprehensive prompt as a starting brief for your Figma designer or Figma Make AI to generate the complete design system and all screens for this module.
+
+  FIGMA PROMPT: MASTER DESIGN SYSTEM PROMPT
+  Create a complete design system and UI kit for an enterprise AI-powered CRM platform called 'OmniCRM'. The platform has two user roles: Super Admin (platform operator managing all customers) and Customer Admin (business user managing their own CRM). The design must follow enterprise SaaS conventions - clean, data-dense, professional, no consumer playfulness. Design System Foundation: Colors - Primary: #1565C0, Primary Dark: #0D47A1, Primary Light: #E3F2FD, Accent: #FF6F00, Success: #2E7D32, Warning: #F57F17, Error: #C62828, Nav Background: #0F1B2D (dark navy), Surface: #FFFFFF, Background: #F5F5F5, Text Primary: #212121, Text Secondary: #616161, Border: #E0E0E0. Typography - Inter font family, scale from 12px to 28px. Spacing - 8px base unit. Border radius - 6px buttons, 8px cards, 12px modals. Icons - Lucide icon set, stroke weight 1.5px.
+
+  FIGMA PROMPT: SUPER ADMIN SCREENS - COMPLETE SET
+  Design the following Super Admin screens for the OmniCRM platform. All screens share: dark navy sidebar (260px, #0F1B2D) with navigation items (Dashboard, Tenants, Subscription Plans, Licenses, Usage Analytics, Alerts, Settings), white top bar (64px) with breadcrumbs and admin profile. Screens to design: (1) Tenant List Dashboard - summary stat cards row, search/filter bar, data table with status badges and usage progress bars, pagination. (2) Tenant Detail View - tabbed interface (Overview, Subscription, License, Usage, Configuration, Audit Trail) with company profile card, stat cards, and recent activity. (3) Create Tenant Form - 3-step stepper (Company Info, Compliance/KYC, Subscription/Review) with plan card selector on step 3. (4) Subscription Plans Management - card grid showing plans with tier badges, pricing, features, and CRUD actions. (5) License Management - table with usage progress bars, override modals, grace extension modals. (6) Usage Analytics - KPI cards, stacked area chart for daily consumption, donut chart for distribution, top consumers table. (7) Alerts Center - alert rules table with configuration modal, alert history feed. Include empty states, loading skeletons, error states, and confirmation modals for destructive actions.
+
+  FIGMA PROMPT: CUSTOMER ADMIN SCREENS - COMPLETE SET
+  Design the following Customer Admin screens for OmniCRM. These screens use a different sidebar navigation than Super Admin: Dashboard, Contacts, Companies, Deals, Campaigns, AI Agents, Call Logs, Reports, Settings. Same top bar but shows customer company name instead of 'Admin'. Screens to design: (1) CRM Dashboard - conditional alert banner (amber for low usage, red for exhausted), 4 subscription health cards (Plan info, AI Minutes circular gauge, Renewal countdown, Resource usage bars), 6 quick action cards grid, recent activity feed + notifications panel. (2) My Subscription page - 3 tabs: My Plan (current plan card with features grid and plan comparison), Usage Details (area chart with thresholds, resource bars, usage history table with export), Billing History (invoice table with expandable line items). (3) Company Settings - vertical tab layout: Company Profile (read-only + editable sections), Business Hours (weekly calendar with time pickers), Notifications (channel toggles, threshold sliders, digest preference), Data Privacy (retention period, date format, data export). Include upgrade/downgrade request flows, cancellation flow with reason capture, and auto-renewal toggle with confirmation.
+
+  FIGMA PROMPT: SHARED COMPONENTS LIBRARY
+  Create a shared component library for OmniCRM with the following components in all their states (default, hover, active, disabled, error, loading): (1) Buttons - Primary (#1565C0), Secondary (outline), Danger (#C62828), Danger Outline, Ghost, Icon Button, with sizes Regular (40px) and Compact (32px). (2) Status Badges - Active (green), Suspended (orange), Expired (red), Locked (purple), Soft Deleted (gray), Pending Renewal (amber), Trial (blue), Draft (gray) - all with colored dot indicator and background. (3) Form Fields - Text input, Textarea, Dropdown, Searchable Dropdown, Date Picker, Time Picker, Phone Input with country code, File Upload (drag zone, uploading, uploaded, error states), Toggle Switch, Checkbox, Radio Button - all with labels, helper text, error states, required indicators. (4) Data Table - header row, data rows (default, hover, selected, zebra stripe), sorting indicators, pagination bar, empty state, loading skeleton. (5) Cards - Standard card, Stat card (with icon, metric, label), Plan card (with tier badge, pricing, features list), Action card (with icon and description). (6) Modals - Standard, Destructive confirmation (with type-to-confirm), Form modal. (7) Toasts - Success (green), Warning (amber), Error (red), Info (blue). (8) Navigation - Sidebar expanded and collapsed states, active item, group headers. (9) Progress indicators - Circular gauge, Horizontal bar, Mini inline bar. (10) Alert Banners - Info, Warning, Error, Success. All components use Inter font, Lucide icons, 8px spacing grid, 6px/8px/12px border radius scale.
+
+--- End of Document ---
