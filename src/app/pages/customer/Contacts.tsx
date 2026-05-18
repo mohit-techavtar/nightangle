@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { 
   Search, 
   Filter, 
@@ -116,6 +117,7 @@ const getTagColor = (tag: string) => {
 };
 
 export function Contacts() {
+  const navigate = useNavigate();
   const [selectedContacts, setSelectedContacts] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -231,9 +233,10 @@ export function Contacts() {
                 ).map((contact) => (
                   <tr 
                     key={contact.id} 
-                    className={`hover:bg-slate-50/50 transition-colors ${selectedContacts.has(contact.id) ? 'bg-blue-50/30' : 'bg-white'}`}
+                    onClick={() => navigate(`/tenant/contacts/${contact.id}`)}
+                    className={`hover:bg-slate-50/50 transition-colors cursor-pointer ${selectedContacts.has(contact.id) ? 'bg-blue-50/30' : 'bg-white'}`}
                   >
-                    <td className="p-4 w-4">
+                    <td className="p-4 w-4" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center">
                         <input 
                           type="checkbox" 

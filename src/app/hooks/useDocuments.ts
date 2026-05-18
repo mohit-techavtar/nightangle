@@ -13,8 +13,15 @@ export interface MergeField {
 export interface DocumentSection {
   id: string;
   type: "text" | "table" | "image" | "signature" | "terms" | "lineItems";
+  title?: string;
   content: string;
   order: number;
+  // Table-specific
+  columns?: string[];
+  rows?: string[][];
+  // Image-specific
+  imageUrl?: string;
+  imageAlt?: string;
   styles?: {
     fontSize?: string;
     fontWeight?: string;
@@ -438,7 +445,7 @@ export function useDocuments() {
   };
 
   // Document actions
-  const sendDocument = (documentId: string, channel: "email" | "whatsapp", recipient: string) => {
+  const sendDocument = (documentId: string, channel: "email" | "whatsapp", recipient?: string) => {
     const document = documents.find(d => d.id === documentId);
     if (!document) return;
 

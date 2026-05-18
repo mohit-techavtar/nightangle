@@ -38,6 +38,8 @@ import { AuditCompliance } from "./pages/admin/settings/AuditCompliance";
 import { SystemMaintenance } from "./pages/admin/settings/SystemMaintenance";
 import { AppearanceBranding } from "./pages/admin/settings/AppearanceBranding";
 import { LeadFormConfiguration } from "./pages/admin/settings/LeadFormConfiguration";
+import { FiscalCalendar } from "./pages/admin/settings/FiscalCalendar";
+import { CompanyBranchManagement } from "./pages/admin/CompanyBranchManagement";
 import { LeadAssignmentConfig } from "./pages/admin/LeadAssignmentConfig";
 import { AdminLayout, CustomerLayout } from "./components/layout/AdminLayout";
 import { CustomerDashboard } from "./pages/customer/CustomerDashboard";
@@ -57,6 +59,8 @@ import { LeadScoringDashboard } from "./pages/customer/LeadScoringDashboard";
 import { DuplicateLeadManagement } from "./pages/customer/DuplicateLeadManagement";
 import { WorkflowAutomation } from "./pages/customer/WorkflowAutomation";
 import { Contacts } from "./pages/customer/Contacts";
+import { ContactDetail } from "./pages/customer/ContactDetail";
+import { ProductMaster } from "./pages/customer/ProductMaster";
 import { CompanySettings } from "./pages/customer/CompanySettings";
 import { MySubscription } from "./pages/customer/MySubscription";
 import { CampaignManager } from "./pages/customer/CampaignManager";
@@ -280,7 +284,10 @@ export const router = createBrowserRouter([
       { path: "settings/audit", Component: AuditCompliance },
       { path: "settings/maintenance", Component: SystemMaintenance },
       { path: "settings/appearance", Component: AppearanceBranding },
+      { path: "settings/fiscal", Component: FiscalCalendar },
       { path: "settings/lead-form", Component: LeadFormConfiguration },
+      { path: "companies", Component: CompanyBranchManagement },
+      { path: "companies/:id", Component: CompanyBranchManagement },
       { path: "lead-assignment-config", Component: LeadAssignmentConfig },
       { path: "billing", Component: SuperAdminBillingDashboard },
       { path: "billing/platform", Component: SuperAdminBillingDashboard },
@@ -331,6 +338,8 @@ export const router = createBrowserRouter([
       { path: "duplicates", Component: DuplicateLeadManagement },
       { path: "workflow-automation", Component: WorkflowAutomation },
       { path: "contacts", Component: Contacts },
+      { path: "contacts/:id", Component: ContactDetail },
+      { path: "crm-customization/products", Component: ProductMaster },
       { path: "companies", Component: Companies },
       { path: "deals", Component: DealDashboard },
       { path: "deals/list", Component: DealList },

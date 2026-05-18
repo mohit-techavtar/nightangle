@@ -7,7 +7,8 @@ import {
   GitBranch, ChevronDown, ChevronUp, Star, Clock, AlertCircle, UserX, User as UserIcon,
   Search, Target, UserPlus, Edit3, Share2, Mail, Kanban, TrendingUp, Copy, Workflow, Settings2,
   Globe, Shield, Plug, Wrench, Palette, Radio, Library, BarChart2, DollarSign, FileCheck, Database, Calendar,
-  Activity, CreditCard as CreditCardIcon, Receipt, Zap, History, Grid3x3, Ban, Lock as LockIcon, Key, Webhook
+  Activity, CreditCard as CreditCardIcon, Receipt, Zap, History, Grid3x3, Ban, Lock as LockIcon, Key, Webhook,
+  Package, Network
 } from "lucide-react";
 
 interface SubNavItem {
@@ -119,6 +120,7 @@ const campaignItems: PlaygroundSubItem[] = [
 
 const settingsItems: PlaygroundSubItem[] = [
   { label: "Platform Settings", icon: Globe, path: "/admin/settings/platform" },
+  { label: "Fiscal Year & Holidays", icon: Calendar, path: "/admin/settings/fiscal" },
   { label: "Email & Notifications", icon: Mail, path: "/admin/settings/email" },
   { label: "Security & Authentication", icon: Shield, path: "/admin/settings/security" },
   { label: "Billing & Payments", icon: CreditCard, path: "/admin/settings/billing" },
@@ -167,6 +169,7 @@ const integrationItems: PlaygroundSubItem[] = [
 
 const crmCustomizationItems: PlaygroundSubItem[] = [
   { label: "Modules & Fields", icon: Database, path: "/tenant/crm-customization" },
+  { label: "Product Master", icon: Package, path: "/tenant/crm-customization/products" },
   { label: "Page Layouts", icon: Grid3x3, path: "/tenant/crm-customization" },
   { label: "Validation Rules", icon: Shield, path: "/tenant/crm-customization" },
   { label: "Pipelines", icon: TrendingUp, path: "/tenant/crm-customization" },
@@ -268,6 +271,7 @@ const adminNav: NavGroup[] = [
     label: "Tenant Management",
     items: [
       { label: "All Tenants", icon: Building2, path: "/admin/tenants" },
+      { label: "Companies & Branches", icon: Network, path: "/admin/companies" },
       { label: "Subscription Plans", icon: CreditCard, path: "/admin/subscription-plans" },
       { label: "License Management", icon: KeyRound, path: "/admin/licenses" },
     ]

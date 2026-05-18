@@ -3,7 +3,7 @@ import { TopBar } from "../../components/layout/TopBar";
 import { 
   Settings as SettingsIcon, Globe, Bell, Shield, CreditCard, 
   Plug, FileText, Wrench, Palette, Database, Mail, Lock,
-  Server, Code, Zap, Eye, CheckCircle
+  Server, Code, Zap, Eye, CheckCircle, Calendar
 } from "lucide-react";
 import { PlatformSettings } from "./settings/PlatformSettings";
 import { EmailNotifications } from "./settings/EmailNotifications";
@@ -13,9 +13,11 @@ import { APIIntegrations } from "./settings/APIIntegrations";
 import { AuditCompliance } from "./settings/AuditCompliance";
 import { SystemMaintenance } from "./settings/SystemMaintenance";
 import { AppearanceBranding } from "./settings/AppearanceBranding";
+import { FiscalCalendar } from "./settings/FiscalCalendar";
 
 type SettingsModule = 
   | "platform"
+  | "fiscal"
   | "email"
   | "security"
   | "billing"
@@ -38,6 +40,12 @@ const settingsMenu: SettingsMenuItem[] = [
     label: "Platform Settings",
     icon: Globe,
     description: "General platform configuration and defaults",
+  },
+  {
+    id: "fiscal",
+    label: "Fiscal Year & Holidays",
+    icon: Calendar,
+    description: "Configure fiscal year, quarters, and holiday calendar",
   },
   {
     id: "email",
@@ -92,6 +100,8 @@ export function Settings() {
     switch (activeModule) {
       case "platform":
         return <PlatformSettings />;
+      case "fiscal":
+        return <FiscalCalendar />;
       case "email":
         return <EmailNotifications />;
       case "security":

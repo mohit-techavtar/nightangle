@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams, useParams } from "react-router";
 import { useDocuments } from "../../hooks/useDocuments";
 import { useDeals } from "../../hooks/useDeals";
 import { useLeads } from "../../hooks/useLeads";
@@ -26,7 +26,9 @@ import type { DocumentSection } from "../../hooks/useDocuments";
 export function DocumentCreate() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const documentId = searchParams.get("id");
+  const routeParams = useParams<{ id?: string }>();
+  // Support BOTH /documents/:id/edit (route param) AND ?id=... (query param)
+  const documentId = routeParams.id || searchParams.get("id") || undefined;
   const templateId = searchParams.get("template");
 
   const {
@@ -73,7 +75,13 @@ export function DocumentCreate() {
         setSections(template.sections);
         setDocumentName(`New ${template.name}`);
       }
+    } else {
+      // Fresh "/create" entry — give a default name so Save isn't blocked
+      if (!documentName) {
+        setDocumentName(`Untitled Document - ${new Date().toLocaleDateString()}`);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentId, selectedTemplateId, documents, templates]);
 
   // Auto-populate merge data when deal/lead selected
@@ -167,9 +175,21 @@ export function DocumentCreate() {
       return;
     }
 
-    if (!selectedTemplateId) {
-      alert("Please select a template");
-      return;
+    // Auto-pick a default template if user didn't select one (was a dead-end before)
+    let templateToUse = selectedTemplateId;
+    let templateNameStr = "Custom Document";
+    if (!templateToUse) {
+      const defaultTpl = templates.find(t => t.isActive && t.isDefault)
+        || templates.find(t => t.isActive)
+        || templates[0];
+      if (defaultTpl) {
+        templateToUse = defaultTpl.id;
+        templateNameStr = defaultTpl.name;
+        if (sections.length === 0) setSections(defaultTpl.sections);
+      }
+    } else {
+      const t = templates.find(tt => tt.id === templateToUse);
+      if (t) templateNameStr = t.name;
     }
 
     if (documentId) {
@@ -179,19 +199,25 @@ export function DocumentCreate() {
         mergeData,
       });
       alert("Document updated successfully!");
+      navigate(`/tenant/documents/${documentId}`);
     } else {
-      createDocument({
-        templateId: selectedTemplateId,
+      const newDoc = createDocument({
+        templateId: templateToUse || "",
+        templateName: templateNameStr,
         name: documentName,
         type: documentType as any,
+        status: "draft",
         dealId: selectedDealId || undefined,
+        dealName: selectedDealId ? deals.find(d => d.id === selectedDealId)?.name : undefined,
         leadId: selectedLeadId || undefined,
+        leadName: selectedLeadId ? leads.find(l => l.id === selectedLeadId)?.name : undefined,
         content: sections,
         mergeData,
-        status: "draft",
+        notes: "",
       });
-      alert("Document created successfully!");
-      navigate("/tenant/documents");
+      // Redirect to the new document's detail page after create
+      if (newDoc && newDoc.id) navigate(`/tenant/documents/${newDoc.id}`);
+      else navigate("/tenant/documents");
     }
   };
 
