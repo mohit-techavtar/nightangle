@@ -8,7 +8,7 @@ import {
   Search, Target, UserPlus, Edit3, Share2, Mail, Kanban, TrendingUp, Copy, Workflow, Settings2,
   Globe, Shield, Plug, Wrench, Palette, Radio, Library, BarChart2, DollarSign, FileCheck, Database, Calendar,
   Activity, CreditCard as CreditCardIcon, Receipt, Zap, History, Grid3x3, Ban, Lock as LockIcon, Key, Webhook,
-  Package, Network
+  Package, Network, ShoppingCart, Store, ShoppingBag
 } from "lucide-react";
 
 interface SubNavItem {
@@ -177,6 +177,14 @@ const crmCustomizationItems: PlaygroundSubItem[] = [
   { label: "Automation Rules", icon: Zap, path: "/tenant/crm-customization" },
 ];
 
+const ecommerceItems: PlaygroundSubItem[] = [
+  { label: "Dashboard", icon: LayoutDashboard, path: "/tenant/ecommerce" },
+  { label: "Store Connections", icon: Store, path: "/tenant/ecommerce/connections" },
+  { label: "Orders", icon: ShoppingCart, path: "/tenant/ecommerce/orders" },
+  { label: "Products", icon: Package, path: "/tenant/ecommerce/products" },
+  { label: "Customers", icon: UserIcon, path: "/tenant/ecommerce/customers" },
+];
+
 const billingItems: PlaygroundSubItem[] = [
   { label: "Billing Dashboard", icon: LayoutDashboard, path: "/admin/billing" },
   { label: "Invoices", icon: Receipt, path: "/admin/billing/invoices" },
@@ -217,6 +225,12 @@ const customerNav: NavGroup[] = [
       { label: "Deals", icon: Handshake, path: "/tenant/deals" },
       { label: "Documents", icon: FileText, path: "/tenant/documents", playgroundItems: documentItems },
       { label: "CRM Setup", icon: Settings2, path: "/tenant/crm-customization", playgroundItems: crmCustomizationItems },
+    ]
+  },
+  {
+    label: "E-Commerce",
+    items: [
+      { label: "E-Commerce", icon: Store, path: "/tenant/ecommerce", playgroundItems: ecommerceItems },
     ]
   },
   {

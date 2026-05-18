@@ -61,6 +61,11 @@ import { WorkflowAutomation } from "./pages/customer/WorkflowAutomation";
 import { Contacts } from "./pages/customer/Contacts";
 import { ContactDetail } from "./pages/customer/ContactDetail";
 import { ProductMaster } from "./pages/customer/ProductMaster";
+import { EcommerceDashboard } from "./pages/customer/ecommerce/EcommerceDashboard";
+import { EcommerceConnections } from "./pages/customer/ecommerce/EcommerceConnections";
+import { EcommerceOrders } from "./pages/customer/ecommerce/EcommerceOrders";
+import { EcommerceProducts } from "./pages/customer/ecommerce/EcommerceProducts";
+import { EcommerceCustomers } from "./pages/customer/ecommerce/EcommerceCustomers";
 import { CompanySettings } from "./pages/customer/CompanySettings";
 import { MySubscription } from "./pages/customer/MySubscription";
 import { CampaignManager } from "./pages/customer/CampaignManager";
@@ -340,6 +345,12 @@ export const router = createBrowserRouter([
       { path: "contacts", Component: Contacts },
       { path: "contacts/:id", Component: ContactDetail },
       { path: "crm-customization/products", Component: ProductMaster },
+      // E-Commerce module
+      { path: "ecommerce", Component: EcommerceDashboard },
+      { path: "ecommerce/connections", Component: EcommerceConnections },
+      { path: "ecommerce/orders", Component: EcommerceOrders },
+      { path: "ecommerce/products", Component: EcommerceProducts },
+      { path: "ecommerce/customers", Component: EcommerceCustomers },
       { path: "companies", Component: Companies },
       { path: "deals", Component: DealDashboard },
       { path: "deals/list", Component: DealList },
