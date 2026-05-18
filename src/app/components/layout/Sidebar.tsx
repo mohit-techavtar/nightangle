@@ -223,6 +223,7 @@ const customerNav: NavGroup[] = [
       { label: "Contacts", icon: Contact, path: "/tenant/contacts" },
       { label: "Companies", icon: Briefcase, path: "/tenant/companies" },
       { label: "Deals", icon: Handshake, path: "/tenant/deals" },
+      { label: "Product Master", icon: Package, path: "/tenant/crm-customization/products" },
       { label: "Documents", icon: FileText, path: "/tenant/documents", playgroundItems: documentItems },
       { label: "CRM Setup", icon: Settings2, path: "/tenant/crm-customization", playgroundItems: crmCustomizationItems },
     ]
