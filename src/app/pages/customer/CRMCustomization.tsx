@@ -5,7 +5,7 @@ import {
   AlertCircle, Layers, Database, FormInput, List, Hash, Calendar,
   Image, Paperclip, CheckSquare, Circle, Type, Phone, Mail, Globe,
   Clock, Star, Tag, Link, DollarSign, Percent, Binary, Wand2,
-  BarChart3, Users, Briefcase, Target, FileText, Copy, ArrowUpDown,
+  BarChart3, Users, User as UserIcon, Briefcase, Target, FileText, Copy, ArrowUpDown,
   Filter, SlidersHorizontal, Layout, Workflow, Shield, Zap, Building2,
   X, Check, Info, Lock, Unlock, RefreshCw, Download, Upload, MoreVertical,
   ChevronLeft, Move, PlusCircle, MinusCircle, Save, ChevronUp, LayoutGrid,
@@ -205,9 +205,75 @@ const samplePipelines: Pipeline[] = [
   }
 ];
 
+interface CrmView {
+  id: string;
+  name: string;
+  type: "shared" | "personal";
+  count: number;
+  isDefault: boolean;
+  conditions: string[];
+  icon: React.ElementType;
+}
+
+const sampleViews: CrmView[] = [
+  { id: "v1", name: "All Leads", type: "shared", count: 4782, isDefault: true, conditions: [], icon: Globe },
+  { id: "v2", name: "My Leads", type: "personal", count: 142, isDefault: false, conditions: ["Owner = Me"], icon: UserIcon },
+  { id: "v3", name: "Hot Leads", type: "shared", count: 89, isDefault: false, conditions: ["Score > 80", "Status = Qualified"], icon: Star },
+  { id: "v4", name: "Unassigned", type: "shared", count: 23, isDefault: false, conditions: ["Owner is empty"], icon: AlertCircle },
+  { id: "v5", name: "Today's Follow-ups", type: "personal", count: 17, isDefault: false, conditions: ["Follow-up Date = Today"], icon: Clock },
+  { id: "v6", name: "Stale > 7 Days", type: "shared", count: 34, isDefault: false, conditions: ["Last Activity > 7 days ago"], icon: AlertCircle },
+];
+
+interface CrmWorkflow {
+  id: string;
+  name: string;
+  trigger: string;
+  actions: string[];
+  active: boolean;
+  runs: number;
+  icon: React.ElementType;
+  color: string;
+}
+
+const sampleWorkflows: CrmWorkflow[] = [
+  { id: "w1", name: "Auto-assign New Leads", trigger: "When lead is created", actions: ["Assign to available agent (round-robin)", "Send welcome WhatsApp"], active: true, runs: 1284, icon: Zap, color: "bg-yellow-500" },
+  { id: "w2", name: "Qualified Lead Notification", trigger: "When Lead Score > 80", actions: ["Notify assigned manager", "Create follow-up task", "Update status to Qualified"], active: true, runs: 342, icon: Target, color: "bg-green-500" },
+  { id: "w3", name: "Stale Lead Re-engagement", trigger: "When no activity for 7 days", actions: ["Trigger AI follow-up call", "Send re-engagement SMS"], active: false, runs: 0, icon: RefreshCw, color: "bg-blue-500" },
+  { id: "w4", name: "Deal Won Celebration", trigger: "When Deal stage = Won", actions: ["Send thank you email", "Create onboarding task", "Update lead to Converted"], active: true, runs: 67, icon: Star, color: "bg-purple-500" },
+];
+
 type MainTab = "modules" | "fields" | "layouts" | "validation" | "pipelines" | "views" | "workflows" | "permissions";
 
 export function CRMCustomization() {
+  // Task 8 — state-backed CRM Setup data so Validation Rules and Views
+  // are fully dynamic (create / toggle / delete) instead of static markup.
+  const [validationRules, setValidationRules] = useState<ValidationRule[]>(sampleValidationRules);
+  const [views, setViews] = useState<CrmView[]>(sampleViews);
+
+  const addValidationRule = () => {
+    const n = validationRules.length + 1;
+    setValidationRules(prev => [{ id: `vr-${Date.now()}`, name: `New Rule ${n}`, module: selectedModule.id, condition: "Field is empty", errorMessage: "This field is required", active: true, triggerOn: "both" }, ...prev]);
+  };
+  const toggleValidationRule = (id: string) => setValidationRules(prev => prev.map(r => r.id === id ? { ...r, active: !r.active } : r));
+  const deleteValidationRule = (id: string) => setValidationRules(prev => prev.filter(r => r.id !== id));
+
+  const addView = () => {
+    const n = views.length + 1;
+    setViews(prev => [...prev, { id: `view-${Date.now()}`, name: `Custom View ${n}`, type: "personal", count: 0, isDefault: false, conditions: ["Owner = Me"], icon: Filter }]);
+  };
+  const deleteView = (id: string) => setViews(prev => prev.filter(v => v.id !== id));
+
+  const [workflows, setWorkflows] = useState<CrmWorkflow[]>(sampleWorkflows);
+  const toggleWorkflow = (id: string) => setWorkflows(prev => prev.map(w => w.id === id ? { ...w, active: !w.active } : w));
+  const addWorkflow = () => {
+    const n = workflows.length + 1;
+    setWorkflows(prev => [{ id: `w-${Date.now()}`, name: `New Automation ${n}`, trigger: "When lead is created", actions: ["Notify owner"], active: false, runs: 0, icon: Zap, color: "bg-yellow-500" }, ...prev]);
+  };
+  const duplicateWorkflow = (id: string) => setWorkflows(prev => {
+    const w = prev.find(x => x.id === id); if (!w) return prev;
+    return [{ ...w, id: `w-${Date.now()}`, name: `${w.name} (copy)`, runs: 0 }, ...prev];
+  });
+
   const [activeTab, setActiveTab] = useState<MainTab>("modules");
   const [selectedModule, setSelectedModule] = useState<CRMModule>(sampleModules[0]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -225,7 +291,7 @@ export function CRMCustomization() {
     { id: "modules", label: "Modules", icon: Layers },
     { id: "fields", label: "Fields", icon: FormInput, badge: selectedModule.fields.length },
     { id: "layouts", label: "Page Layouts", icon: Layout },
-    { id: "validation", label: "Validation Rules", icon: Shield, badge: sampleValidationRules.filter(r => r.module === selectedModule.id).length },
+    { id: "validation", label: "Validation Rules", icon: Shield, badge: validationRules.filter(r => r.module === selectedModule.id).length },
     { id: "pipelines", label: "Pipelines", icon: TrendingUp, badge: samplePipelines.length },
     { id: "views", label: "Views & Filters", icon: Filter },
     { id: "workflows", label: "Automation", icon: Workflow },
@@ -682,14 +748,14 @@ export function CRMCustomization() {
                   <h3 className="text-base font-semibold text-gray-900">Validation Rules</h3>
                   <p className="text-sm text-gray-500 mt-0.5">Define rules to ensure data quality and business compliance</p>
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
+                <button onClick={addValidationRule} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
                   <Plus className="w-4 h-4" />
                   New Rule
                 </button>
               </div>
 
               <div className="space-y-4">
-                {sampleValidationRules.filter(r => r.module === selectedModule.id || selectedModule.id === "leads").map(rule => (
+                {validationRules.filter(r => r.module === selectedModule.id || selectedModule.id === "leads").map(rule => (
                   <div key={rule.id} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-indigo-200 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-3">
@@ -699,9 +765,9 @@ export function CRMCustomization() {
                         <div>
                           <div className="flex items-center gap-2">
                             <p className="font-semibold text-gray-900">{rule.name}</p>
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${rule.active ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                            <button onClick={() => toggleValidationRule(rule.id)} className={`text-xs px-2 py-0.5 rounded-full cursor-pointer transition-colors ${rule.active ? "bg-green-50 text-green-700 hover:bg-green-100" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
                               {rule.active ? "Active" : "Inactive"}
-                            </span>
+                            </button>
                             <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">
                               On {rule.triggerOn === "both" ? "Create & Update" : rule.triggerOn === "create" ? "Create" : "Update"}
                             </span>
@@ -719,10 +785,10 @@ export function CRMCustomization() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 ml-4">
-                        <button className="p-1.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors">
+                        <button onClick={() => toggleValidationRule(rule.id)} className="p-1.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors">
                           <Edit3 className="w-4 h-4" />
                         </button>
-                        <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                        <button onClick={() => deleteValidationRule(rule.id)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -905,21 +971,14 @@ export function CRMCustomization() {
                   <h3 className="text-base font-semibold text-gray-900">Views & Saved Filters</h3>
                   <p className="text-sm text-gray-500 mt-0.5">Create and manage custom views for {selectedModule.label}</p>
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
+                <button onClick={addView} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
                   <Plus className="w-4 h-4" />
                   Create View
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[
-                  { name: "All Leads", type: "shared", count: 4782, isDefault: true, conditions: [], icon: Globe },
-                  { name: "My Leads", type: "personal", count: 142, isDefault: false, conditions: ["Owner = Me"], icon: UserIcon },
-                  { name: "Hot Leads", type: "shared", count: 89, isDefault: false, conditions: ["Score > 80", "Status = Qualified"], icon: Star },
-                  { name: "Unassigned", type: "shared", count: 23, isDefault: false, conditions: ["Owner is empty"], icon: AlertCircle },
-                  { name: "Today's Follow-ups", type: "personal", count: 17, isDefault: false, conditions: ["Follow-up Date = Today"], icon: Clock },
-                  { name: "Stale > 7 Days", type: "shared", count: 34, isDefault: false, conditions: ["Last Activity > 7 days ago"], icon: AlertCircle },
-                ].map((view, i) => (
+                {views.map((view, i) => (
                   <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-indigo-200 hover:shadow-sm transition-all">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -949,7 +1008,7 @@ export function CRMCustomization() {
                     )}
                     <div className="flex items-center gap-2 mt-2">
                       <button className="flex-1 text-xs text-indigo-600 hover:text-indigo-700 border border-indigo-200 hover:bg-indigo-50 px-2 py-1.5 rounded-lg transition-colors">Edit</button>
-                      <button className="text-xs text-gray-500 hover:text-red-600 border border-gray-200 hover:border-red-200 hover:bg-red-50 px-2 py-1.5 rounded-lg transition-colors">
+                      <button onClick={() => deleteView(view.id)} className="text-xs text-gray-500 hover:text-red-600 border border-gray-200 hover:border-red-200 hover:bg-red-50 px-2 py-1.5 rounded-lg transition-colors">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -1011,51 +1070,14 @@ export function CRMCustomization() {
                   <h3 className="text-base font-semibold text-gray-900">Automation Rules</h3>
                   <p className="text-sm text-gray-500 mt-0.5">Auto-trigger actions when conditions are met</p>
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
+                <button onClick={addWorkflow} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
                   <Plus className="w-4 h-4" />
                   New Automation
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  {
-                    name: "Auto-assign New Leads",
-                    trigger: "When lead is created",
-                    actions: ["Assign to available agent (round-robin)", "Send welcome WhatsApp"],
-                    active: true,
-                    runs: 1284,
-                    icon: Zap,
-                    color: "bg-yellow-500"
-                  },
-                  {
-                    name: "Qualified Lead Notification",
-                    trigger: "When Lead Score > 80",
-                    actions: ["Notify assigned manager", "Create follow-up task", "Update status to Qualified"],
-                    active: true,
-                    runs: 342,
-                    icon: Target,
-                    color: "bg-green-500"
-                  },
-                  {
-                    name: "Stale Lead Re-engagement",
-                    trigger: "When no activity for 7 days",
-                    actions: ["Trigger AI follow-up call", "Send re-engagement SMS"],
-                    active: false,
-                    runs: 0,
-                    icon: RefreshCw,
-                    color: "bg-blue-500"
-                  },
-                  {
-                    name: "Deal Won Celebration",
-                    trigger: "When Deal stage = Won",
-                    actions: ["Send thank you email", "Create onboarding task", "Update lead to Converted"],
-                    active: true,
-                    runs: 67,
-                    icon: Star,
-                    color: "bg-purple-500"
-                  },
-                ].map((workflow, i) => (
+                {workflows.map((workflow, i) => (
                   <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-indigo-200 hover:shadow-sm transition-all">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -1068,9 +1090,8 @@ export function CRMCustomization() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button className={`relative w-9 h-5 rounded-full transition-colors ${workflow.active ? "bg-indigo-500" : "bg-gray-300"}`}>
-                          <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${workflow.active ? "translate-x-4" : "translate-x-0.5"}`} />
-                        </button>
+                        <button onClick={() => toggleWorkflow(workflow.id)} className={`relative w-9 h-5 rounded-full transition-colors ${workflow.active ? "bg-indigo-500" : "bg-gray-300"}`}>
+                          <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${workflow.active ? "translate-x-4" : "translate-x-0.5"}`} /></button>
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -1088,7 +1109,7 @@ export function CRMCustomization() {
                     <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
                       <button className="flex-1 text-xs text-indigo-600 border border-indigo-200 hover:bg-indigo-50 px-2 py-1.5 rounded-lg transition-colors">Edit</button>
                       <button className="text-xs text-gray-500 border border-gray-200 hover:bg-gray-50 px-2 py-1.5 rounded-lg transition-colors">History</button>
-                      <button className="text-xs text-gray-500 border border-gray-200 hover:bg-gray-50 px-2 py-1.5 rounded-lg transition-colors">Duplicate</button>
+                      <button onClick={() => duplicateWorkflow(workflow.id)} className="text-xs text-gray-500 border border-gray-200 hover:bg-gray-50 px-2 py-1.5 rounded-lg transition-colors">Duplicate</button>
                     </div>
                   </div>
                 ))}

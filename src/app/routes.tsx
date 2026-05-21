@@ -125,6 +125,10 @@ import { EmailSettings } from "./pages/customer/EmailSettings";
 import { DealDashboard } from "./pages/customer/DealDashboard";
 import { DealList } from "./pages/customer/DealList";
 import { CreateDeal } from "./pages/customer/CreateDeal";
+import { CreateDealEnhanced } from "./pages/customer/CreateDealEnhanced";
+import { CreateLead } from "./pages/customer/CreateLead";
+import { LeadRecords } from "./pages/customer/LeadRecords";
+import { CreateCampaignEnhanced } from "./pages/customer/CreateCampaignEnhanced";
 import { DealDetail } from "./pages/customer/DealDetail";
 import { DealPipeline } from "./pages/customer/DealPipeline";
 import { DealForecasting } from "./pages/customer/DealForecasting";
@@ -345,6 +349,8 @@ export const router = createBrowserRouter([
       { path: "leads", Component: LeadManagement },
       { path: "lead-detail", Component: LeadDetail },
       { path: "lead-kanban", Component: LeadKanban },
+      { path: "leads/records", Component: LeadRecords },
+      { path: "leads/create", Component: CreateLead },
       { path: "lead-scoring", Component: LeadScoringDashboard },
       { path: "duplicates", Component: DuplicateLeadManagement },
       { path: "workflow-automation", Component: WorkflowAutomation },
@@ -366,7 +372,8 @@ export const router = createBrowserRouter([
       { path: "companies", Component: Companies },
       { path: "deals", Component: DealDashboard },
       { path: "deals/list", Component: DealList },
-      { path: "deals/create", Component: CreateDeal },
+      { path: "deals/create", Component: CreateDealEnhanced },
+      { path: "deals/create-classic", Component: CreateDeal },
       { path: "deals/detail", Component: DealDetail },
       { path: "deals/edit", Component: DealEdit },
       { path: "deals/pipeline", Component: DealPipeline },
@@ -379,7 +386,8 @@ export const router = createBrowserRouter([
       { path: "documents/templates/create", Component: DocumentTemplates },
       { path: "documents/templates/:id", Component: DocumentTemplates },
       { path: "campaigns", Component: CampaignList },
-      { path: "campaigns/create", Component: CreateOmniCampaign },
+      { path: "campaigns/create", Component: CreateCampaignEnhanced },
+      { path: "campaigns/create-omni", Component: CreateOmniCampaign },
       { path: "campaigns/dashboard", Component: CampaignDashboard },
       { path: "campaigns/:id", Component: CampaignDetail },
       { path: "campaigns/:id/edit", Component: CreateOmniCampaign },
@@ -389,6 +397,8 @@ export const router = createBrowserRouter([
       { path: "ai-campaigns", Component: CampaignManager },
       { path: "ai-campaigns/create", Component: CreateCampaign },
       { path: "ai-agents", Component: AIAgents },
+      { path: "ai-agents/create", Component: EditAgent },
+      { path: "ai-agents/edit", Component: EditAgent },
       { path: "edit-agent", Component: EditAgent },
       { path: "ai-calling", Component: AICallingDashboard },
       { path: "live-monitor", Component: LiveMonitor },
@@ -449,7 +459,8 @@ export const router = createBrowserRouter([
       { path: "reports/cost", Component: CostTransparencyReport },
       { path: "reports-analytics", Component: ReportsAnalyticsDashboard },
       { path: "reports-analytics/builder", Component: ReportBuilder },
-      { path: "settings/company", Component: CompanySettingsEnhanced },
+      { path: "settings/company", Component: CompanySettings },
+      { path: "settings/company-legacy", Component: CompanySettingsEnhanced },
       { path: "settings/subscription", Component: MySubscription },
       { path: "subscription", Component: MySubscription },
       { path: "billing", Component: CustomerBillingDashboard },

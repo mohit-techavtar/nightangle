@@ -56,6 +56,8 @@ const playgroundItems: PlaygroundSubItem[] = [
 
 const leadManagementItems: PlaygroundSubItem[] = [
   { label: "Lead List View", icon: GitBranch, path: "/tenant/leads" },
+  { label: "Leads (CRUD)", icon: UserPlus, path: "/tenant/leads/records" },
+  { label: "Create Lead", icon: UserPlus, path: "/tenant/leads/create" },
   { label: "Lead Kanban", icon: Kanban, path: "/tenant/lead-kanban" },
   { label: "Lead Scoring", icon: TrendingUp, path: "/tenant/lead-scoring" },
   { label: "Duplicate Management", icon: Copy, path: "/tenant/duplicates" },

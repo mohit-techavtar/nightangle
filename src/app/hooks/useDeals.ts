@@ -91,6 +91,8 @@ export interface Deal {
   createdBy: string;
   updatedAt: string;
   closedAt?: string;
+  /** Extended Zoho-style fields (address, shipping, charges, guidelines, misc). */
+  extended?: Record<string, any>;
 }
 
 export interface DealActivity {
