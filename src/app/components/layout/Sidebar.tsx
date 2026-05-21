@@ -170,6 +170,8 @@ const integrationItems: PlaygroundSubItem[] = [
 const crmCustomizationItems: PlaygroundSubItem[] = [
   { label: "Modules & Fields", icon: Database, path: "/tenant/crm-customization" },
   { label: "Product Master", icon: Package, path: "/tenant/crm-customization/products" },
+  { label: "Contact Form Config", icon: Contact, path: "/tenant/settings/contact-form" },
+  { label: "Lead Form Config", icon: GitBranch, path: "/tenant/settings/lead-form" },
   { label: "Page Layouts", icon: Grid3x3, path: "/tenant/crm-customization" },
   { label: "Validation Rules", icon: Shield, path: "/tenant/crm-customization" },
   { label: "Pipelines", icon: TrendingUp, path: "/tenant/crm-customization" },
@@ -221,6 +223,7 @@ const customerNav: NavGroup[] = [
     items: [
       { label: "Lead Management", icon: GitBranch, path: "/tenant/leads", playgroundItems: leadManagementItems },
       { label: "Contacts", icon: Contact, path: "/tenant/contacts" },
+      { label: "Accounts", icon: Building2, path: "/tenant/accounts" },
       { label: "Companies", icon: Briefcase, path: "/tenant/companies" },
       { label: "Deals", icon: Handshake, path: "/tenant/deals" },
       { label: "Product Master", icon: Package, path: "/tenant/crm-customization/products" },
@@ -263,6 +266,7 @@ const customerNav: NavGroup[] = [
     label: "Team",
     items: [
       { label: "Team Management", icon: UserIcon, path: "/tenant/team", playgroundItems: teamManagementItems },
+      { label: "Org Hierarchy", icon: Network, path: "/tenant/org-hierarchy" },
       { label: "Admin Controls", icon: LockIcon, path: "/tenant/admin-controls" },
     ]
   },

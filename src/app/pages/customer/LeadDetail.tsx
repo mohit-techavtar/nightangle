@@ -6,6 +6,8 @@ import {
   User, Tag, ChevronDown, ChevronUp, ArrowRight, MessageCircle,
   FileText, Bot, Edit, UserPlus, Clock, PhoneCall, Plus, Star
 } from "lucide-react";
+import { LeadStageTabs, DEFAULT_LEAD_STAGES } from "../../components/lead/LeadStageTabs";
+import { ActivityForm, type ActivityEntry } from "../../components/lead/ActivityForm";
 
 interface Activity {
   id: string;
@@ -154,6 +156,8 @@ export function LeadDetail() {
   const [lead, setLead] = useState<Lead>(mockLead);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [customFieldsExpanded, setCustomFieldsExpanded] = useState(true);
+  const [showActivityForm, setShowActivityForm] = useState(false);
+  const [loggedActivities, setLoggedActivities] = useState<ActivityEntry[]>([]);
 
   const handleCopy = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
@@ -318,61 +322,17 @@ export function LeadDetail() {
                   </div>
                 </div>
 
-                {/* Stage Stepper */}
+                {/* Stage Stepper — gradient pipeline tabs */}
                 <div className="mt-6 pt-6 border-t border-[#E0E0E0]">
                   <div className="text-xs font-semibold text-[#616161] uppercase tracking-wider mb-4">
                     Pipeline Stage
                   </div>
-                  <div className="flex items-center justify-between relative">
-                    {/* Progress Line */}
-                    <div className="absolute top-5 left-0 right-0 h-0.5 bg-[#E0E0E0]">
-                      <div
-                        className="h-full bg-gradient-to-r from-[#1565C0] to-[#0D47A1] transition-all duration-500"
-                        style={{
-                          width: `${(getCurrentStageIndex() / (stages.length - 1)) * 100}%`,
-                        }}
-                      />
-                    </div>
-
-                    {/* Stage Nodes */}
-                    {stages.map((stage, index) => {
-                      const isComplete = index < getCurrentStageIndex();
-                      const isCurrent = stage.name === lead.stage;
-                      const isPending = index > getCurrentStageIndex();
-
-                      return (
-                        <div
-                          key={stage.id}
-                          className="flex flex-col items-center relative z-10"
-                        >
-                          <div
-                            className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all ${
-                              isCurrent
-                                ? "bg-gradient-to-br from-[#1565C0] to-[#0D47A1] text-white shadow-lg scale-110"
-                                : isComplete
-                                ? "bg-[#1565C0] text-white"
-                                : "bg-white border-2 border-[#E0E0E0] text-[#9E9E9E]"
-                            }`}
-                          >
-                            {isComplete && <Check size={18} />}
-                            {isCurrent && <Star size={18} />}
-                            {isPending && <span className="text-xs font-semibold">{index + 1}</span>}
-                          </div>
-                          <span
-                            className={`text-xs font-semibold whitespace-nowrap ${
-                              isCurrent
-                                ? "text-[#1565C0]"
-                                : isComplete
-                                ? "text-[#212121]"
-                                : "text-[#9E9E9E]"
-                            }`}
-                          >
-                            {stage.name}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <LeadStageTabs
+                    stages={DEFAULT_LEAD_STAGES}
+                    activeKey={lead.stage}
+                    onChange={(key) => setLead({ ...lead, stage: key })}
+                    variant="path"
+                  />
                 </div>
               </div>
 
@@ -380,11 +340,44 @@ export function LeadDetail() {
               <div className="bg-white rounded-lg shadow-sm border border-[#E0E0E0] p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-[#212121]">Activity Timeline</h2>
-                  <button className="px-3 py-1.5 rounded-md border border-[#E0E0E0] text-sm font-medium text-[#616161] hover:bg-[#F5F5F5] flex items-center gap-2">
+                  <button
+                    onClick={() => setShowActivityForm((s) => !s)}
+                    className="px-3 py-1.5 rounded-md border border-[#1565C0] text-sm font-medium text-[#1565C0] hover:bg-[#E3F2FD] flex items-center gap-2">
                     <Plus size={16} />
-                    Add Activity
+                    {showActivityForm ? "Close" : "Add Activity"}
                   </button>
                 </div>
+
+                {showActivityForm && (
+                  <div className="mb-6">
+                    <ActivityForm
+                      nepali={lead.location?.toLowerCase().includes("nepal")}
+                      onLog={(entry) => { setLoggedActivities((p) => [entry, ...p]); setShowActivityForm(false); }}
+                      onCancel={() => setShowActivityForm(false)}
+                    />
+                  </div>
+                )}
+
+                {loggedActivities.length > 0 && (
+                  <div className="mb-6 space-y-2">
+                    {loggedActivities.map((a) => (
+                      <div key={a.id} className="flex items-start gap-3 bg-[#F3F8FF] border border-[#BBDEFB] rounded-lg px-3 py-2.5">
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#1565C0] text-white capitalize mt-0.5">{a.type}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-[#212121]">{a.subject}</div>
+                          {a.body && <div className="text-xs text-[#616161] mt-0.5">{a.body}</div>}
+                          <div className="text-xs text-[#9E9E9E] mt-1 flex flex-wrap gap-x-3">
+                            {a.outcome && <span>Outcome: {a.outcome}</span>}
+                            {a.durationMin && <span>{a.durationMin} min</span>}
+                            {a.direction && <span className="capitalize">{a.direction}</span>}
+                            {a.followUpDate && <span>Follow-up: {new Date(a.followUpDate).toLocaleDateString("en-GB")}</span>}
+                            {a.priority && a.type === "task" && <span>Priority: {a.priority}</span>}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="relative">
                   {/* Vertical Timeline Line */}

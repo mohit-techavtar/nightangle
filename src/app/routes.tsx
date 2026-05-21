@@ -60,6 +60,12 @@ import { DuplicateLeadManagement } from "./pages/customer/DuplicateLeadManagemen
 import { WorkflowAutomation } from "./pages/customer/WorkflowAutomation";
 import { Contacts } from "./pages/customer/Contacts";
 import { ContactDetail } from "./pages/customer/ContactDetail";
+import { ContactsEnhanced } from "./pages/customer/ContactsEnhanced";
+import { Accounts } from "./pages/customer/Accounts";
+import { AccountDetail } from "./pages/customer/AccountDetail";
+import { OrgHierarchy } from "./pages/customer/OrgHierarchy";
+import { ContactFormSettings, LeadFormSettings } from "./pages/customer/FormSettings";
+import { CompanySettingsEnhanced } from "./pages/customer/CompanySettingsEnhanced";
 import { ProductMaster } from "./pages/customer/ProductMaster";
 import { EcommerceDashboard } from "./pages/customer/ecommerce/EcommerceDashboard";
 import { EcommerceConnections } from "./pages/customer/ecommerce/EcommerceConnections";
@@ -342,8 +348,14 @@ export const router = createBrowserRouter([
       { path: "lead-scoring", Component: LeadScoringDashboard },
       { path: "duplicates", Component: DuplicateLeadManagement },
       { path: "workflow-automation", Component: WorkflowAutomation },
-      { path: "contacts", Component: Contacts },
+      { path: "contacts", Component: ContactsEnhanced },
+      { path: "contacts/legacy", Component: Contacts },
       { path: "contacts/:id", Component: ContactDetail },
+      { path: "accounts", Component: Accounts },
+      { path: "accounts/:id", Component: AccountDetail },
+      { path: "org-hierarchy", Component: OrgHierarchy },
+      { path: "settings/contact-form", Component: ContactFormSettings },
+      { path: "settings/lead-form", Component: LeadFormSettings },
       { path: "crm-customization/products", Component: ProductMaster },
       // E-Commerce module
       { path: "ecommerce", Component: EcommerceDashboard },
@@ -437,7 +449,7 @@ export const router = createBrowserRouter([
       { path: "reports/cost", Component: CostTransparencyReport },
       { path: "reports-analytics", Component: ReportsAnalyticsDashboard },
       { path: "reports-analytics/builder", Component: ReportBuilder },
-      { path: "settings/company", Component: CompanySettings },
+      { path: "settings/company", Component: CompanySettingsEnhanced },
       { path: "settings/subscription", Component: MySubscription },
       { path: "subscription", Component: MySubscription },
       { path: "billing", Component: CustomerBillingDashboard },
