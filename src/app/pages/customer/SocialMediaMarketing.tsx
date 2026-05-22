@@ -267,98 +267,60 @@ export function SocialMediaMarketing() {
       />
       <div className="flex-1 overflow-auto p-6 max-md:p-4">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-6 max-md:mb-4">
-            <h1 className="text-2xl max-md:text-xl font-bold text-[#212121] mb-2">Social Media Marketing Engine</h1>
-            <p className="text-sm text-[#616161]">AI-powered social media automation with multi-platform publishing and ad management</p>
+          {/* Hero */}
+          <div className="mb-6 max-md:mb-4 rounded-2xl p-6 max-md:p-4 bg-gradient-to-br from-[#1565C0] via-[#5E35B1] to-[#7B1FA2] text-white relative overflow-hidden">
+            <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
+            <div className="absolute right-16 bottom-0 w-24 h-24 rounded-full bg-white/10" />
+            <div className="relative">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 text-xs font-medium mb-3"><Zap size={12} /> Business Playground</div>
+              <h1 className="text-2xl max-md:text-xl font-bold mb-1.5">Social Media Marketing Engine</h1>
+              <p className="text-sm text-white/85 max-w-xl">Generate on-brand content with AI, schedule across platforms, and manage paid campaigns — all in one workspace.</p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {["Instagram", "Facebook", "LinkedIn", "Twitter/X", "TikTok"].map((p) => (
+                  <span key={p} className="px-2.5 py-1 rounded-full bg-white/15 text-xs font-medium">{p}</span>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-4 max-md:grid-cols-2 gap-4 mb-6 max-md:mb-4">
-            <div className="bg-white rounded-lg border border-[#E0E0E0] p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-[#E3F2FD] flex items-center justify-center">
-                  <Share2 className="text-[#1565C0]" size={20} />
+          {/* KPIs */}
+          <div className="grid grid-cols-4 max-md:grid-cols-2 gap-3 mb-6 max-md:mb-4">
+            {[
+              { label: "Total Posts", value: stats.totalPosts, icon: Share2, grad: "from-[#42A5F5] to-[#1565C0]" },
+              { label: "Scheduled", value: stats.scheduled, icon: Calendar, grad: "from-[#FFB74D] to-[#F57C00]" },
+              { label: "Published", value: stats.published, icon: TrendingUp, grad: "from-[#66BB6A] to-[#2E7D32]" },
+              { label: "Active Ads", value: stats.activeCampaigns, icon: Target, grad: "from-[#AB47BC] to-[#6A1B9A]" },
+            ].map((k) => {
+              const Icon = k.icon;
+              return (
+                <div key={k.label} className="bg-white rounded-xl border border-[#E0E0E0] p-4">
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${k.grad} text-white flex items-center justify-center mb-2`}><Icon size={18} /></div>
+                  <div className="text-2xl font-bold text-[#212121]">{k.value}</div>
+                  <div className="text-xs text-[#9E9E9E] uppercase tracking-wide">{k.label}</div>
                 </div>
-                <div>
-                  <div className="text-xs text-[#616161] uppercase font-semibold">Total Posts</div>
-                  <div className="text-2xl font-bold text-[#212121]">{stats.totalPosts}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg border border-[#E0E0E0] p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-[#FFF8E1] flex items-center justify-center">
-                  <Calendar className="text-[#F57F17]" size={20} />
-                </div>
-                <div>
-                  <div className="text-xs text-[#616161] uppercase font-semibold">Scheduled</div>
-                  <div className="text-2xl font-bold text-[#F57F17]">{stats.scheduled}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg border border-[#E0E0E0] p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-[#E8F5E9] flex items-center justify-center">
-                  <Zap className="text-[#4CAF50]" size={20} />
-                </div>
-                <div>
-                  <div className="text-xs text-[#616161] uppercase font-semibold">Published</div>
-                  <div className="text-2xl font-bold text-[#4CAF50]">{stats.published}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg border border-[#E0E0E0] p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-[#F3E5F5] flex items-center justify-center">
-                  <Target className="text-[#6A1B9A]" size={20} />
-                </div>
-                <div>
-                  <div className="text-xs text-[#616161] uppercase font-semibold">Active Ads</div>
-                  <div className="text-2xl font-bold text-[#6A1B9A]">{stats.activeCampaigns}</div>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center gap-2 mb-6 max-md:mb-4 border-b border-[#E0E0E0]">
-            <button
-              onClick={() => setActiveTab("generator")}
-              className={`px-4 py-3 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
-                activeTab === "generator"
-                  ? "border-[#1565C0] text-[#1565C0]"
-                  : "border-transparent text-[#616161] hover:text-[#212121]"
-              }`}
-            >
-              <Share2 size={16} />
-              Post Generator
-            </button>
-            <button
-              onClick={() => setActiveTab("calendar")}
-              className={`px-4 py-3 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
-                activeTab === "calendar"
-                  ? "border-[#1565C0] text-[#1565C0]"
-                  : "border-transparent text-[#616161] hover:text-[#212121]"
-              }`}
-            >
-              <Calendar size={16} />
-              Content Calendar
-            </button>
-            <button
-              onClick={() => setActiveTab("ads")}
-              className={`px-4 py-3 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
-                activeTab === "ads"
-                  ? "border-[#1565C0] text-[#1565C0]"
-                  : "border-transparent text-[#616161] hover:text-[#212121]"
-              }`}
-            >
-              <Target size={16} />
-              Ad Management
-            </button>
+          <div className="flex items-center gap-2 mb-6 max-md:mb-4">
+            {[
+              { id: "generator", label: "Post Generator", icon: Share2 },
+              { id: "calendar", label: "Content Calendar", icon: Calendar },
+              { id: "ads", label: "Ad Management", icon: Target },
+            ].map((t) => {
+              const Icon = t.icon;
+              const active = activeTab === (t.id as any);
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setActiveTab(t.id as any)}
+                  className={`px-4 h-10 rounded-lg text-sm font-semibold flex items-center gap-2 border transition-all ${active ? "bg-[#1565C0] text-white border-[#1565C0] shadow-sm" : "bg-white text-[#616161] border-[#E0E0E0] hover:bg-[#F5F5F5]"}`}
+                >
+                  <Icon size={16} /> {t.label}
+                </button>
+              );
+            })}
           </div>
 
           {/* Content */}

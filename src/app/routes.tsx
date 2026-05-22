@@ -390,7 +390,7 @@ export const router = createBrowserRouter([
       { path: "campaigns/create-omni", Component: CreateOmniCampaign },
       { path: "campaigns/dashboard", Component: CampaignDashboard },
       { path: "campaigns/:id", Component: CampaignDetail },
-      { path: "campaigns/:id/edit", Component: CreateOmniCampaign },
+      { path: "campaigns/:id/edit", Component: CreateCampaignEnhanced },
       { path: "campaigns/:id/analytics", Component: CallAnalytics },
       { path: "campaigns/:id/budget", Component: CampaignBudgetManager },
       { path: "campaigns/:id/monitor", Component: CampaignExecutionMonitor },

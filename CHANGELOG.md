@@ -1,114 +1,70 @@
-# OmniCRM — Feature Implementation Changelog
+# LeadChain CRM — Change Log (Email · Campaign · Social · Team)
 
-Senior PM + Frontend Engineer delivery. All code matches the existing design system
-(Material hex palette, Tailwind utilities, lucide-react icons, mock-store/hook pattern)
-and is **backend-swap ready** — every hook isolates data so a real API can replace the
-mock layer without touching UI.
+Senior PM + Frontend Engineering pass for the 5 requested items. Stack respected: **React 18 + Vite + TypeScript + Tailwind 4 + shadcn/Radix + lucide-react + zustand + recharts + sonner**. Build is `vite build` (esbuild, no type-check gate). Every file below was transform/syntax-validated with esbuild 0.21.5, and all 10 existing Email pages were re-validated against the refactored store.
 
-Files are delivered under the same paths as the source repo. Drop them into
-`src/app/...`. **3 existing files are modified** (diffs described below); the rest are new.
+## How to apply
+Unzip into your project root so files land at their existing `src/app/...` paths (overwriting where noted), then:
 
----
+```
+pnpm install   # or npm install
+pnpm build
+```
 
-## How the 11 requirements map to files
-
-| # | Requirement | New / Changed files |
-|---|-------------|---------------------|
-| 1 | Multi-level hierarchy + reporting-to-manager + branch level | `hooks/useOrgHierarchy.ts`, `pages/customer/OrgHierarchy.tsx` |
-| 2 | Branch-level lead & data distribution | `lib/leadDistribution.ts`, `pages/customer/OrgHierarchy.tsx` (Distribution tab) |
-| 3 | Miti (Nepali date) when location = Nepal | `lib/nepaliDate.ts`, `components/common/MitiDateField.tsx`, `pages/customer/CompanySettingsEnhanced.tsx` |
-| 4 | Salesforce-like Contacts module | `pages/customer/ContactsEnhanced.tsx`, `hooks/useCrmData.ts` |
-| 5 | User-configurable Contact form | `lib/formSchema.ts`, `hooks/useFormConfig.ts`, `components/forms/FormBuilder.tsx`, `pages/customer/FormSettings.tsx` |
-| 6 | CSV/Excel import + add-contact form | `lib/csvImport.ts`, `components/forms/ContactImportWizard.tsx`, `components/forms/DynamicForm.tsx`, `pages/customer/ContactsEnhanced.tsx` |
-| 7 | Detailed Salesforce-like Lead form config | `lib/formSchema.ts` (`defaultLeadSchema`), `pages/customer/FormSettings.tsx` (`LeadFormSettings`) |
-| 8 | Enhanced company settings + initial setup steps | `pages/customer/CompanySettingsEnhanced.tsx` |
-| 9 | Gradient colour design on lead stage tabs | `components/lead/LeadStageTabs.tsx`, integrated into `pages/customer/LeadDetail.tsx` |
-| 10 | Activity form in lead module | `components/lead/ActivityForm.tsx`, integrated into `pages/customer/LeadDetail.tsx` |
-| 11 | Accounts module (deals + many contacts) | `hooks/useCrmData.ts`, `pages/customer/Accounts.tsx`, `pages/customer/AccountDetail.tsx` |
-
-Plus wiring: `routes.tsx` and `components/layout/Sidebar.tsx`.
+No backend required — Email state is now a shared in-session store; Campaign state already persists to `localStorage`.
 
 ---
 
-## NEW FILES
+## Requirement → file map
 
-### Foundation — libraries (`src/app/lib/`)
-- **`nepaliDate.ts`** — Bikram Sambat (Miti) ⇄ Gregorian conversion + formatting
-  (`adToBs`, `bsToAd`, `formatMiti`, `todayMiti`, `isNepaliLocale`, `dualDateLabel`),
-  Latin + Devanagari numerals, month-length table for 2078–2090 BS with heuristic fallback.
-- **`leadDistribution.ts`** — Branch-level distribution engine: `round_robin`,
-  `load_balanced`, `territory`, `manual` strategies + `simulateDistribution()`.
-- **`formSchema.ts`** — Configurable form-schema model (sections/fields/validation) with
-  Salesforce-like `defaultContactSchema` and `defaultLeadSchema`. Shared by Contact (5) & Lead (7) configs.
-- **`csvImport.ts`** — Dependency-free CSV/TSV (Excel-paste) parser, fuzzy header → field
-  auto-mapping, validation + duplicate detection.
-
-### Foundation — hooks (`src/app/hooks/`)
-- **`useOrgHierarchy.ts`** — Users with `branchId` + `reportsTo` (multi-level). Builds the
-  reporting tree (`buildTree`), `getDescendants`, `getManagerChain`, `getTeam` (data-visibility
-  rollup), branch scoping. Seed users mirror the existing branch ids (`comp-1..comp-5`).
-- **`useFormConfig.ts`** — Persists live contact/lead/account layouts to `localStorage`
-  (key `omnicrm.formSchemas.v1`); used by builder + renderer.
-- **`useCrmData.ts`** — Contacts + Accounts data layer with account↔contact associations,
-  account hierarchy (`parentAccountId`), and `relatedDealIds`.
-
-### Components
-- **`components/common/MitiDateField.tsx`** — Dual AD/BS date input + `DualDateLabel`.
-- **`components/forms/DynamicForm.tsx`** — Renders any `FormSchema` into a validated form.
-- **`components/forms/FormBuilder.tsx`** — Salesforce-style layout editor (reorder, show/hide,
-  required toggle, add/edit/delete fields & sections).
-- **`components/forms/ContactImportWizard.tsx`** — 4-step CSV/Excel import (Upload → Map → Review → Done).
-- **`components/lead/LeadStageTabs.tsx`** — Gradient stage tabs (`path` chevrons or `tabs` pills).
-- **`components/lead/ActivityForm.tsx`** — Log Call/Email/Meeting/Task/Note with outcome,
-  duration, priority, and follow-up scheduling.
-
-### Pages (`src/app/pages/customer/`)
-- **`OrgHierarchy.tsx`** — Reporting Hierarchy tree (branch-filterable, capacity bars) +
-  Lead Distribution rules with live simulation.
-- **`ContactsEnhanced.tsx`** — Salesforce-like contacts: search, branch filter, account &
-  branch columns, configurable add form, CSV import, export.
-- **`FormSettings.tsx`** — Exports `ContactFormSettings` and `LeadFormSettings` (Build + Live Preview tabs).
-- **`Accounts.tsx`** / **`AccountDetail.tsx`** — Accounts module: list with KPIs + detail with
-  Contacts / Deals / Sub-accounts tabs and add-contact.
-- **`CompanySettingsEnhanced.tsx`** — Adds **Localization & Miti** (Nepal-aware) and
-  **Initial Setup** (onboarding steps + progress) tabs.
+| # | Requirement | Files | Type |
+|---|-------------|-------|------|
+| 1 | Email module — Salesforce style + all CRUD | `hooks/useEmail.ts` (+ all `Email*`/`CreateEmail*` pages verified) | Modified |
+| 2 | Campaign creation — detailed + CRUD | `pages/customer/CreateCampaignEnhanced.tsx` | Rewrite |
+| 3 | Campaign module — modern Salesforce theme | `pages/customer/CampaignList.tsx`, `pages/customer/CampaignDashboard.tsx` | Rewrite |
+| 4 | Social media marketing (Business Playground) | `pages/customer/SocialMediaMarketing.tsx` | Modified |
+| 5 | Team management + branch dependency | `pages/customer/TeamUserManagement.tsx` | Rewrite |
+| — | Routing | `routes.tsx` (campaign edit → CRUD creator) | Modified |
 
 ---
 
-## MODIFIED EXISTING FILES
+## Feature detail
 
-### `src/app/routes.tsx`
-1. Added imports: `ContactsEnhanced`, `Accounts`, `AccountDetail`, `OrgHierarchy`,
-   `ContactFormSettings`, `LeadFormSettings`, `CompanySettingsEnhanced`.
-2. Under the `/tenant` children:
-   - `contacts` now points to **`ContactsEnhanced`** (old page kept at `contacts/legacy`).
-   - Added: `accounts`, `accounts/:id`, `org-hierarchy`,
-     `settings/contact-form`, `settings/lead-form`.
-   - `settings/company` now points to **`CompanySettingsEnhanced`**.
+### 1 — Email module (Salesforce style + CRUD)
+The Email pages in the provided codebase were already drafted in a Salesforce-Lightning style (`#0176D3` palette) with CRUD wired against `useEmail()` — **EmailDashboard, EmailInbox, EmailTemplates, EmailCampaigns, EmailCompose, CreateEmailTemplate, CreateEmailCampaign, EmailSignatures, EmailAnalytics, EmailSettings**.
 
-### `src/app/components/layout/Sidebar.tsx`
-1. **CRM** group: added `Accounts` (`/tenant/accounts`) under Contacts.
-2. **Team** group: added `Org Hierarchy` (`/tenant/org-hierarchy`).
-3. **CRM Setup** submenu (`crmCustomizationItems`): added `Contact Form Config`
-   (`/tenant/settings/contact-form`) and `Lead Form Config` (`/tenant/settings/lead-form`).
-   (All icons reused from the existing import block — no new icon imports needed.)
+The gap was that `useEmail()` used local `useState`, so every page held its **own copy** of the data — creating a template on one page didn’t appear on another. **Net-new this round:** `useEmail.ts` was converted to a shared **Zustand store** (`useEmailStore`) while preserving the **exact public API** (`threads, templates, signatures, campaigns, config` + all `create*/update*/delete*/markAsRead/markAsUnread/archive/approve/start/pause/updateConfig` + `getStats`). Result: all CRUD now **persists across the whole module** in-session, with no consumer changes required. Seed data was expanded (3 threads, 3 templates, 2 email campaigns) so list/detail/analytics views look populated. All 10 pages were re-compiled against the new store.
 
-### `src/app/pages/customer/LeadDetail.tsx`
-1. Imports `LeadStageTabs` + `ActivityForm`.
-2. The hand-rolled "Stage Stepper" is replaced by the gradient **`<LeadStageTabs variant="path">`** (req 9).
-3. "Add Activity" now toggles the inline **`<ActivityForm>`**; logged entries render above the
-   timeline (req 10). Miti is auto-enabled when the lead location contains "Nepal".
+### 2 — Campaign creation (detailed + CRUD)
+`CreateCampaignEnhanced.tsx` rewritten into a **6-step Salesforce-styled wizard** — **Basics → Channels → Audience → Schedule & Budget → Automation → Review** — now fully **CRUD-wired** to `useCampaigns`:
+- **Create** new campaigns and **Edit** existing ones via `:id` (`getCampaignById` prefill).
+- **Save Draft** (status `draft`) at any step and **Launch** (status `active` + `startCampaign`).
+- Detailed fields: type, objective, priority, tags; primary + fallback channels with per-channel config (email subject / SMS body / WhatsApp template / AI agent); audience segmentation (stages, sources, score range, owner) + exclusion rules; schedule (immediate/scheduled/recurring) + budget caps + currency + auto-pause; AI orchestration and automation toggles; a review summary.
+
+### 3 — Campaign module (modern Salesforce theme)
+- **`CampaignList.tsx`** rewritten into a Salesforce Lightning **console**: KPI strip (active / reach / avg conversion / spend, computed live), **list-view tabs** (all / active / scheduled / paused / draft / completed with counts), search + channel filter, **table & grid** layouts, and a **row-action menu with full CRUD** — View, Edit (→ wizard), Duplicate, Pause/Resume, Delete (confirm modal) — all via `useCampaigns`.
+- **`CampaignDashboard.tsx`** rewritten as a data-driven dashboard: live KPIs, a **channel-mix donut** and **Sent-vs-Converted bar chart** (recharts), and a recent-campaigns list — all sourced from `useCampaigns` instead of static arrays.
+
+### 4 — Social Media Marketing (Business Playground)
+`SocialMediaMarketing.tsx` redesigned shell while **preserving all logic and subcomponents** (`SocialPostGenerator`, `GeneratedPostsPreview`, `ContentCalendar`, `AdManagementDashboard`) and every handler:
+- A **gradient hero** badged “Business Playground” with platform chips.
+- A modern **KPI card row** (Total Posts / Scheduled / Published / Active Ads).
+- **Pill-style tabs** (Post Generator / Content Calendar / Ad Management).
+
+### 5 — Team Management + branch dependency
+`TeamUserManagement.tsx` rewritten to be **branch-aware**, sourced from `useOrgHierarchy` + `useCompanies`:
+- **Branch summary chips** (All + per-branch active/total) that **scope the entire console**.
+- Users table with **Branch** and **Reports To** columns, role badges, load bars, and status.
+- **Full CRUD**: Add / Edit (modal) and Activate/Deactivate (`addUser` / `updateUser`).
+- **True branch dependency:** in the Add/Edit form, changing **Branch resets the manager**, and the **“Reports To” options are filtered to managers of the selected branch** (Branch Head / Regional Manager / Sales Manager / Team Lead / Tenant Admin).
 
 ---
 
-## Integration notes & assumptions
-- **Mock-layer ids:** `useOrgHierarchy` users (`u-1..u-14`) align with `useCompanies` branch ids
-  (`comp-1..comp-5`) but are intentionally **separate** from the Zustand `seedUsers` (`USR-001`).
-  A production step would add `branchId` + `reportsTo` to the store `User` type and merge these.
-- **Form config persistence** uses `localStorage`; swap `useFormConfig` internals for an API call.
-- **Distribution** runs client-side for demo/preview; in production it would execute server-side
-  on lead capture (web form, import, AI call) using the same rule shapes.
-- **Build:** the project builds with `vite build` (esbuild, no type-check gate). All new/edited
-  files were transform-validated and cross-file exports verified. Run `pnpm install && pnpm build`.
-- **Nepal is the HQ** (`comp-1`, Kathmandu/NPR/Asia-Kathmandu) in the existing mock, so Miti is
-  active by default on the company settings + lead detail surfaces.
+## Routing change (`routes.tsx`)
+- `campaigns/:id/edit` now resolves to **`CreateCampaignEnhanced`** (the CRUD-capable creator) instead of `CreateOmniCampaign`, so Edit from the list opens the detailed wizard prefilled. `campaigns/create` already used `CreateCampaignEnhanced`; `campaigns/create-omni` remains available.
+
+---
+
+## Notes & scope
+- These are flagship UI implementations on the existing mock/hook layer, structured for a clean backend swap (hooks isolate state).
+- The Email pages themselves were already Salesforce-styled with CRUD in the provided codebase; the meaningful net-new value for item 1 is making that CRUD **shared and persistent** module-wide via the store refactor (plus verification). Items 2–5 are substantive redesigns/rewrites.
+- `useCampaigns` already persisted via `localStorage` (key `leadchain.campaigns.v1`) from a prior round, so campaign CRUD survives reloads.
